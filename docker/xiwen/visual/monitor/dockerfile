@@ -1,0 +1,15 @@
+# 基础镜像
+FROM  openjdk:8-jre
+# author
+MAINTAINER xiwen
+
+# 挂载目录
+VOLUME /home/xiwen
+# 创建目录
+RUN mkdir -p /home/xiwen
+# 指定路径
+WORKDIR /home/xiwen
+# 复制jar文件到路径
+COPY ./jar/xiwen-visual-monitor.jar /home/xiwen/xiwen-visual-monitor.jar
+# 启动系统服务
+ENTRYPOINT ["java","-jar","xiwen-visual-monitor.jar"]

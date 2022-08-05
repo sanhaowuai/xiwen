@@ -1,0 +1,2 @@
+com.xiwen.common.log.service.AsyncLogService
+com.xiwen.common.log.aspect.LogAspect

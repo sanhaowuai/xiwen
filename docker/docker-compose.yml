@@ -1,0 +1,140 @@
+version : '3.8'
+services:
+  xiwen-nacos:
+    container_name: xiwen-nacos
+    image: nacos/nacos-server
+    build:
+      context: ./nacos
+    environment:
+      - MODE=standalone
+    volumes:
+      - ./nacos/logs/:/home/nacos/logs
+      - ./nacos/conf/application.properties:/home/nacos/conf/application.properties
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "9849:9849"
+    depends_on:
+      - xiwen-mysql
+  xiwen-mysql:
+    container_name: xiwen-mysql
+    image: mysql:5.7
+    build:
+      context: ./mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/conf:/etc/mysql/conf.d
+      - ./mysql/logs:/logs
+      - ./mysql/data:/var/lib/mysql
+    command: [
+          'mysqld',
+          '--innodb-buffer-pool-size=80M',
+          '--character-set-server=utf8mb4',
+          '--collation-server=utf8mb4_unicode_ci',
+          '--default-time-zone=+8:00',
+          '--lower-case-table-names=1'
+        ]
+    environment:
+      MYSQL_DATABASE: 'ry-cloud'
+      MYSQL_ROOT_PASSWORD: password
+  xiwen-redis:
+    container_name: xiwen-redis
+    image: redis
+    build:
+      context: ./redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/conf/redis.conf:/home/xiwen/redis/redis.conf
+      - ./redis/data:/data
+    command: redis-server /home/xiwen/redis/redis.conf
+  xiwen-nginx:
+    container_name: xiwen-nginx
+    image: nginx
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/html/dist:/home/xiwen/projects/xiwen-ui
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - xiwen-gateway
+    links:
+      - xiwen-gateway
+  xiwen-gateway:
+    container_name: xiwen-gateway
+    build:
+      context: ./xiwen/gateway
+      dockerfile: dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - xiwen-redis
+    links:
+      - xiwen-redis
+  xiwen-auth:
+    container_name: xiwen-auth
+    build:
+      context: ./xiwen/auth
+      dockerfile: dockerfile
+    ports:
+      - "9200:9200"
+    depends_on:
+      - xiwen-redis
+    links:
+      - xiwen-redis
+  xiwen-modules-system:
+    container_name: xiwen-modules-system
+    build:
+      context: ./xiwen/modules/system
+      dockerfile: dockerfile
+    ports:
+      - "9201:9201"
+    depends_on:
+      - xiwen-redis
+      - xiwen-mysql
+    links:
+      - xiwen-redis
+      - xiwen-mysql
+  xiwen-modules-gen:
+    container_name: xiwen-modules-gen
+    build:
+      context: ./xiwen/modules/gen
+      dockerfile: dockerfile
+    ports:
+      - "9202:9202"
+    depends_on:
+      - xiwen-mysql
+    links:
+      - xiwen-mysql
+  xiwen-modules-job:
+    container_name: xiwen-modules-job
+    build:
+      context: ./xiwen/modules/job
+      dockerfile: dockerfile
+    ports:
+      - "9203:9203"
+    depends_on:
+      - xiwen-mysql
+    links:
+      - xiwen-mysql
+  xiwen-modules-file:
+    container_name: xiwen-modules-file
+    build:
+      context: ./xiwen/modules/file
+      dockerfile: dockerfile
+    ports:
+      - "9300:9300"
+    volumes:
+    - ./xiwen/uploadPath:/home/xiwen/uploadPath
+  xiwen-visual-monitor:
+    container_name: xiwen-visual-monitor
+    build:
+      context: ./xiwen/visual/monitor
+      dockerfile: dockerfile
+    ports:
+      - "9100:9100"

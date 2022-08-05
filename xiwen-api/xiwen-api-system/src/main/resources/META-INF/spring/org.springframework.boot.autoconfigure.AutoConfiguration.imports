@@ -1,0 +1,3 @@
+com.xiwen.system.api.factory.RemoteUserFallbackFactory
+com.xiwen.system.api.factory.RemoteLogFallbackFactory
+com.xiwen.system.api.factory.RemoteFileFallbackFactory

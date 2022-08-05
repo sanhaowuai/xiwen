@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.xiwen</groupId>
+        <artifactId>xiwen</artifactId>
+        <version>3.6.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>xiwen-common-log</module>
+        <module>xiwen-common-core</module>
+        <module>xiwen-common-redis</module>
+        <module>xiwen-common-swagger</module>
+        <module>xiwen-common-security</module>
+        <module>xiwen-common-datascope</module>
+		<module>xiwen-common-datasource</module>
+    </modules>
+
+    <artifactId>xiwen-common</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+	    xiwen-common通用模块
+    </description>
+
+</project>
