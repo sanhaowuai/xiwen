@@ -10,6 +10,8 @@ import com.xiwen.common.redis.service.RedisService;
 import com.xiwen.common.security.utils.SecurityUtils;
 import com.xiwen.system.api.domain.SysUser;
 
+import javax.annotation.Resource;
+
 /**
  * 登录密码方法
  * 
@@ -18,14 +20,14 @@ import com.xiwen.system.api.domain.SysUser;
 @Component
 public class SysPasswordService
 {
-    @Autowired
+    @Resource
     private RedisService redisService;
 
     private int maxRetryCount = CacheConstants.passwordMaxRetryCount;
 
     private Long lockTime = CacheConstants.passwordLockTime;
 
-    @Autowired
+    @Resource
     private SysRecordLogService recordLogService;
 
     /**

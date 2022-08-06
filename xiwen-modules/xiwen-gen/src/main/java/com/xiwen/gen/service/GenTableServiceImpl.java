@@ -37,6 +37,8 @@ import com.xiwen.gen.util.GenUtils;
 import com.xiwen.gen.util.VelocityInitializer;
 import com.xiwen.gen.util.VelocityUtils;
 
+import javax.annotation.Resource;
+
 /**
  * 业务 服务层实现
  * 
@@ -47,10 +49,10 @@ public class GenTableServiceImpl implements IGenTableService
 {
     private static final Logger log = LoggerFactory.getLogger(GenTableServiceImpl.class);
 
-    @Autowired
+    @Resource
     private GenTableMapper genTableMapper;
 
-    @Autowired
+    @Resource
     private GenTableColumnMapper genTableColumnMapper;
 
     /**

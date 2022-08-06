@@ -27,6 +27,8 @@ import com.xiwen.system.api.domain.SysUser;
 import com.xiwen.system.api.model.LoginUser;
 import com.xiwen.system.service.ISysUserService;
 
+import javax.annotation.Resource;
+
 /**
  * 个人信息 业务处理
  * 
@@ -36,13 +38,13 @@ import com.xiwen.system.service.ISysUserService;
 @RequestMapping("/user/profile")
 public class SysProfileController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysUserService userService;
     
-    @Autowired
+    @Resource
     private TokenService tokenService;
     
-    @Autowired
+    @Resource
     private RemoteFileService remoteFileService;
 
     /**

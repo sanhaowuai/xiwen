@@ -54,8 +54,8 @@ import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
-import xiwenGit from '@/components/xiwen/Git'
-import xiwenDoc from '@/components/xiwen/Doc'
+import xiwenGit from '@/components/XiWen/Git'
+import xiwenDoc from '@/components/XiWen/Doc'
 
 export default {
   components: {

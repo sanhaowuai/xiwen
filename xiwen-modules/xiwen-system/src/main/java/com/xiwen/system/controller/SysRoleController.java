@@ -1,6 +1,7 @@
 package com.xiwen.system.controller;
 
 import java.util.List;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -36,10 +37,10 @@ import com.xiwen.system.service.ISysUserService;
 @RequestMapping("/role")
 public class SysRoleController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysRoleService roleService;
 
-    @Autowired
+    @Resource
     private ISysUserService userService;
 
     @RequiresPermissions("system:role:list")

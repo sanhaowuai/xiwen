@@ -11,7 +11,7 @@
     <name>xiwen</name>
 <!--    <url>http://www.xiwen.vip</url>-->
     <url>http://www.xiwen.vip</url>
-    <description>若依微服务系统</description>
+    <description>希文微服务系统</description>
 
     <properties>
         <xiwen.version>3.6.0</xiwen.version>

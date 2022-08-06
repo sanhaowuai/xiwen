@@ -7,6 +7,8 @@ import com.xiwen.system.domain.SysNotice;
 import com.xiwen.system.mapper.SysNoticeMapper;
 import com.xiwen.system.service.ISysNoticeService;
 
+import javax.annotation.Resource;
+
 /**
  * 公告 服务层实现
  * 
@@ -15,7 +17,7 @@ import com.xiwen.system.service.ISysNoticeService;
 @Service
 public class SysNoticeServiceImpl implements ISysNoticeService
 {
-    @Autowired
+    @Resource
     private SysNoticeMapper noticeMapper;
 
     /**

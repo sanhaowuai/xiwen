@@ -21,6 +21,8 @@ import com.xiwen.gateway.config.properties.IgnoreWhiteProperties;
 import io.jsonwebtoken.Claims;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Resource;
+
 /**
  * 网关鉴权
  * 

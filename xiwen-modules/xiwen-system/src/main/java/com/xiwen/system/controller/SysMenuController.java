@@ -22,6 +22,8 @@ import com.xiwen.common.security.utils.SecurityUtils;
 import com.xiwen.system.domain.SysMenu;
 import com.xiwen.system.service.ISysMenuService;
 
+import javax.annotation.Resource;
+
 /**
  * 菜单信息
  * 
@@ -31,7 +33,7 @@ import com.xiwen.system.service.ISysMenuService;
 @RequestMapping("/menu")
 public class SysMenuController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysMenuService menuService;
 
     /**

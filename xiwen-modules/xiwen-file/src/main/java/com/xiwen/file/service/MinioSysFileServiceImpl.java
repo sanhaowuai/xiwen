@@ -8,6 +8,8 @@ import com.xiwen.file.utils.FileUploadUtils;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 
+import javax.annotation.Resource;
+
 /**
  * Minio 文件存储
  * 
@@ -16,10 +18,10 @@ import io.minio.PutObjectArgs;
 @Service
 public class MinioSysFileServiceImpl implements ISysFileService
 {
-    @Autowired
+    @Resource
     private MinioConfig minioConfig;
 
-    @Autowired
+    @Resource
     private MinioClient client;
 
     /**

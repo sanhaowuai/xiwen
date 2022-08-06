@@ -2,6 +2,7 @@ package com.xiwen.common.log.aspect;
 
 import java.util.Collection;
 import java.util.Map;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.aspectj.lang.JoinPoint;
@@ -36,7 +37,7 @@ public class LogAspect
 {
     private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
     
-    @Autowired
+    @Resource
     private AsyncLogService asyncLogService;
 
     /**

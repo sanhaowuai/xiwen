@@ -1,6 +1,7 @@
 package com.xiwen.system.controller;
 
 import java.util.List;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +31,7 @@ import com.xiwen.system.service.ISysLogininforService;
 @RequestMapping("/logininfor")
 public class SysLogininforController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysLogininforService logininforService;
 
     @RequiresPermissions("system:logininfor:list")

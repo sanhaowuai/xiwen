@@ -7,6 +7,8 @@ import com.xiwen.system.api.domain.SysLogininfor;
 import com.xiwen.system.mapper.SysLogininforMapper;
 import com.xiwen.system.service.ISysLogininforService;
 
+import javax.annotation.Resource;
+
 /**
  * 系统访问日志情况信息 服务层处理
  * 
@@ -16,7 +18,7 @@ import com.xiwen.system.service.ISysLogininforService;
 public class SysLogininforServiceImpl implements ISysLogininforService
 {
 
-    @Autowired
+    @Resource
     private SysLogininforMapper logininforMapper;
 
     /**

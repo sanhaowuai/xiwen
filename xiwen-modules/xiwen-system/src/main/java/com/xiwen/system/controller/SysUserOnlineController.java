@@ -23,6 +23,8 @@ import com.xiwen.system.api.model.LoginUser;
 import com.xiwen.system.domain.SysUserOnline;
 import com.xiwen.system.service.ISysUserOnlineService;
 
+import javax.annotation.Resource;
+
 /**
  * 在线用户监控
  * 
@@ -32,10 +34,10 @@ import com.xiwen.system.service.ISysUserOnlineService;
 @RequestMapping("/online")
 public class SysUserOnlineController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysUserOnlineService userOnlineService;
 
-    @Autowired
+    @Resource
     private RedisService redisService;
 
     @RequiresPermissions("monitor:online:list")

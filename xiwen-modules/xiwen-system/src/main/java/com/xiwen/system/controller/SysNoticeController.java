@@ -21,6 +21,8 @@ import com.xiwen.common.security.utils.SecurityUtils;
 import com.xiwen.system.domain.SysNotice;
 import com.xiwen.system.service.ISysNoticeService;
 
+import javax.annotation.Resource;
+
 /**
  * 公告 信息操作处理
  * 
@@ -30,7 +32,7 @@ import com.xiwen.system.service.ISysNoticeService;
 @RequestMapping("/notice")
 public class SysNoticeController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysNoticeService noticeService;
 
     /**

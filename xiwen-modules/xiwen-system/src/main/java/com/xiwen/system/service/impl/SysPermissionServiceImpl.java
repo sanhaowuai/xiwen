@@ -9,13 +9,15 @@ import com.xiwen.system.service.ISysMenuService;
 import com.xiwen.system.service.ISysPermissionService;
 import com.xiwen.system.service.ISysRoleService;
 
+import javax.annotation.Resource;
+
 @Service
 public class SysPermissionServiceImpl implements ISysPermissionService
 {
-    @Autowired
+    @Resource
     private ISysRoleService roleService;
 
-    @Autowired
+    @Resource
     private ISysMenuService menuService;
 
     /**

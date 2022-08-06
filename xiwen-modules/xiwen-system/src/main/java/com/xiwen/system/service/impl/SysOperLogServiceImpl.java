@@ -7,6 +7,8 @@ import com.xiwen.system.api.domain.SysOperLog;
 import com.xiwen.system.mapper.SysOperLogMapper;
 import com.xiwen.system.service.ISysOperLogService;
 
+import javax.annotation.Resource;
+
 /**
  * 操作日志 服务层处理
  * 
@@ -15,7 +17,7 @@ import com.xiwen.system.service.ISysOperLogService;
 @Service
 public class SysOperLogServiceImpl implements ISysOperLogService
 {
-    @Autowired
+    @Resource
     private SysOperLogMapper operLogMapper;
 
     /**

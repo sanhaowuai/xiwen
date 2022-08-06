@@ -8,6 +8,8 @@ import com.xiwen.system.api.domain.SysDictData;
 import com.xiwen.system.mapper.SysDictDataMapper;
 import com.xiwen.system.service.ISysDictDataService;
 
+import javax.annotation.Resource;
+
 /**
  * 字典 业务层处理
  * 
@@ -16,7 +18,7 @@ import com.xiwen.system.service.ISysDictDataService;
 @Service
 public class SysDictDataServiceImpl implements ISysDictDataService
 {
-    @Autowired
+    @Resource
     private SysDictDataMapper dictDataMapper;
 
     /**

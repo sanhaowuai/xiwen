@@ -15,7 +15,7 @@ import com.xiwen.gen.mapper.GenTableColumnMapper;
 @Service
 public class GenTableColumnServiceImpl implements IGenTableColumnService 
 {
-	@Autowired
+	@Resource
 	private GenTableColumnMapper genTableColumnMapper;
 
 	/**

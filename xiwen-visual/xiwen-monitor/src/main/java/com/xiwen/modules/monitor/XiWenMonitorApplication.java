@@ -11,20 +11,22 @@ import de.codecentric.boot.admin.server.config.EnableAdminServer;
  */
 @EnableAdminServer
 @SpringBootApplication
-public class XiWenMonitorApplication
-{
-    public static void main(String[] args)
-    {
+public class XiWenMonitorApplication {
+    public static void main(String[] args) {
         SpringApplication.run(XiWenMonitorApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  监控中心启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
-                " .-------.       ____     __        \n" +
-                " |  _ _   \\      \\   \\   /  /    \n" +
-                " | ( ' )  |       \\  _. /  '       \n" +
-                " |(_ o _) /        _( )_ .'         \n" +
-                " | (_,_).' __  ___(_ o _)'          \n" +
-                " |  |\\ \\  |  ||   |(_,_)'         \n" +
-                " |  | \\ `'   /|   `-'  /           \n" +
-                " |  |  \\    /  \\      /           \n" +
-                " ''-'   `'-'    `-..-'              ");
+        System.out.println("█▀▀▀▀▀▀▀█▀▀▀█▀█████▀▀▀▀▀▀▀█\n" +
+                "█ █▀▀▀█ █ ▄ ▀█ ▀ ▄█ █▀▀▀█ █\n" +
+                "█ █   █ █▄▄█▄█▀█  █ █   █ █\n" +
+                "█ ▀▀▀▀▀ █ █▀▄ █▀▄ █ ▀▀▀▀▀ █\n" +
+                "█▀▀██▀▀▀██▄█▀▄▀ ▄▄██▀█▀▀▀▀█\n" +
+                "███ █▀▄▀▄ ▄▄▀ ▀ ▄▀ ▄ ▀  ▀ █\n" +
+                "█ ▄█▀▀█▀ ██ ▄▀ █ ▄▀██ █▀▄██\n" +
+                "█▄▄▄▀▄█▀▀▀ ▀██▄▄▄▀██ ▀ █ ▀█\n" +
+                "█▀▀██▀▄▀  ▄▀▀▄▀ █▀   ▀ █▀▀█\n" +
+                "█▀▀▀▀▀▀▀█▄█▀▀ ▀▀█ █▀█  ██▀█\n" +
+                "█ █▀▀▀█ █  ▄▄▀ █▀ ▀▀▀ ▄██ █\n" +
+                "█ █   █ ██ ▄██▄▄▄ ▀█ ▀▄█ ▄█\n" +
+                "█ ▀▀▀▀▀ █  ▄▀▄▀ ▄▀█▄▄█▄  ▀█\n" +
+                "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\n");
     }
 }

@@ -14,6 +14,8 @@ import com.xiwen.system.api.RemoteUserService;
 import com.xiwen.system.api.domain.SysUser;
 import com.xiwen.system.api.model.LoginUser;
 
+import javax.annotation.Resource;
+
 /**
  * 登录校验方法
  * 
@@ -22,13 +24,13 @@ import com.xiwen.system.api.model.LoginUser;
 @Component
 public class SysLoginService
 {
-    @Autowired
+    @Resource
     private RemoteUserService remoteUserService;
 
-    @Autowired
+    @Resource
     private SysPasswordService passwordService;
 
-    @Autowired
+    @Resource
     private SysRecordLogService recordLogService;
 
     /**

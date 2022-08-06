@@ -24,6 +24,8 @@ import com.xiwen.common.security.utils.SecurityUtils;
 import com.xiwen.system.api.domain.SysDept;
 import com.xiwen.system.service.ISysDeptService;
 
+import javax.annotation.Resource;
+
 /**
  * 部门信息
  * 
@@ -33,7 +35,7 @@ import com.xiwen.system.service.ISysDeptService;
 @RequestMapping("/dept")
 public class SysDeptController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysDeptService deptService;
 
     /**

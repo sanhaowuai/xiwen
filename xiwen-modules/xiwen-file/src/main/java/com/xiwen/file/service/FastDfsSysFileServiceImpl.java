@@ -22,7 +22,7 @@ public class FastDfsSysFileServiceImpl implements ISysFileService
     @Value("${fdfs.domain}")
     public String domain;
 
-    @Autowired
+    @Resource
     private FastFileStorageClient storageClient;
 
     /**

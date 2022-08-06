@@ -37,7 +37,7 @@ import com.xiwen.job.util.ScheduleUtils;
 @RequestMapping("/job")
 public class SysJobController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysJobService jobService;
 
     /**

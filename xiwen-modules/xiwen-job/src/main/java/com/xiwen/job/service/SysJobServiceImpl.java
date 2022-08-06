@@ -2,6 +2,8 @@ package com.xiwen.job.service;
 
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
 import org.quartz.JobDataMap;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -24,10 +26,10 @@ import com.xiwen.job.util.ScheduleUtils;
 @Service
 public class SysJobServiceImpl implements ISysJobService
 {
-    @Autowired
+    @Resource
     private Scheduler scheduler;
 
-    @Autowired
+    @Resource
     private SysJobMapper jobMapper;
 
     /**

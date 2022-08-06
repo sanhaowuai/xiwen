@@ -14,7 +14,7 @@ import com.xiwen.job.mapper.SysJobLogMapper;
 @Service
 public class SysJobLogServiceImpl implements ISysJobLogService
 {
-    @Autowired
+    @Resource
     private SysJobLogMapper jobLogMapper;
 
     /**

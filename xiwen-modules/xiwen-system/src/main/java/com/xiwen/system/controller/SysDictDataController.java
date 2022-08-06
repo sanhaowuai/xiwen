@@ -2,6 +2,7 @@ package com.xiwen.system.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -35,10 +36,10 @@ import com.xiwen.system.service.ISysDictTypeService;
 @RequestMapping("/dict/data")
 public class SysDictDataController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysDictDataService dictDataService;
     
-    @Autowired
+    @Resource
     private ISysDictTypeService dictTypeService;
 
     @RequiresPermissions("system:dict:list")

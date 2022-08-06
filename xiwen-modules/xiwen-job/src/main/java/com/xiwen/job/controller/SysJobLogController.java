@@ -28,7 +28,7 @@ import com.xiwen.job.service.ISysJobLogService;
 @RequestMapping("/job/log")
 public class SysJobLogController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISysJobLogService jobLogService;
 
     /**

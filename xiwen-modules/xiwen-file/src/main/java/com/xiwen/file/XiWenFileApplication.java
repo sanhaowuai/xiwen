@@ -12,20 +12,22 @@ import com.xiwen.common.swagger.annotation.EnableCustomSwagger2;
  */
 @EnableCustomSwagger2
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
-public class XiWenFileApplication
-{
-    public static void main(String[] args)
-    {
+public class XiWenFileApplication {
+    public static void main(String[] args) {
         SpringApplication.run(XiWenFileApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  文件服务模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
-                " .-------.       ____     __        \n" +
-                " |  _ _   \\      \\   \\   /  /    \n" +
-                " | ( ' )  |       \\  _. /  '       \n" +
-                " |(_ o _) /        _( )_ .'         \n" +
-                " | (_,_).' __  ___(_ o _)'          \n" +
-                " |  |\\ \\  |  ||   |(_,_)'         \n" +
-                " |  | \\ `'   /|   `-'  /           \n" +
-                " |  |  \\    /  \\      /           \n" +
-                " ''-'   `'-'    `-..-'              ");
+        System.out.println("█▀▀▀▀▀▀▀██▀██▀▀▀█▀█▀▀▀▀▀▀▀█\n" +
+                "█ █▀▀▀█ █▀▀ ▄ ▀▀█▄█ █▀▀▀█ █\n" +
+                "█ █   █ ██▄ ▄██▀ ██ █   █ █\n" +
+                "█ ▀▀▀▀▀ █▀▄▀█▀▄▀█ █ ▀▀▀▀▀ █\n" +
+                "█▀▀▀█▀▀▀▀ ▄ ▀▄▀▄  ▀▀███▀███\n" +
+                "█ █▀ ▀█▀▀█▀▄▄█ █ ▀ ▀▄▄█ ▄██\n" +
+                "█ ▀▄ ▀ ▀▄▄██▄▀▀▀ ▄▀▄▀▀█▄▄██\n" +
+                "█▀██ ▀▀▀█ ▄█  █▀ ▀  ▄▄███▄█\n" +
+                "█▀▄ █▀▄▀▀█▀▀▀ ▀▀█  ▀▀▀  ▀▀█\n" +
+                "█▀▀▀▀▀▀▀█ ▀ ▄█▄▀  █▀█ ██ ▄█\n" +
+                "█ █▀▀▀█ █ █▄█▄▀▄▀ ▀▀▀ ▄ ███\n" +
+                "█ █   █ █▀▄▀ █▄█   ▄ ▄▀██▀█\n" +
+                "█ ▀▀▀▀▀ █ █  ▄█ █▄ ▄▀█▄█ ▀█\n" +
+                "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀\n");
     }
 }

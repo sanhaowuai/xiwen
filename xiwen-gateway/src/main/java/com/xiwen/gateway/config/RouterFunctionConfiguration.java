@@ -17,7 +17,7 @@ import com.xiwen.gateway.handler.ValidateCodeHandler;
 @Configuration
 public class RouterFunctionConfiguration
 {
-    @Autowired
+    @Resource
     private ValidateCodeHandler validateCodeHandler;
 
     @SuppressWarnings("rawtypes")

@@ -1,8 +1,8 @@
 {
   "name": "xiwen",
   "version": "3.6.0",
-  "description": "若依管理系统",
-  "author": "若依",
+  "description": "希文管理系统",
+  "author": "希文",
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",

@@ -18,6 +18,8 @@ import com.xiwen.gateway.config.properties.CaptchaProperties;
 import com.xiwen.gateway.service.ValidateCodeService;
 import reactor.core.publisher.Flux;
 
+import javax.annotation.Resource;
+
 /**
  * 验证码过滤器
  *
@@ -28,10 +30,10 @@ public class ValidateCodeFilter extends AbstractGatewayFilterFactory<Object>
 {
     private final static String[] VALIDATE_URL = new String[] { "/auth/login", "/auth/register" };
 
-    @Autowired
+    @Resource
     private ValidateCodeService validateCodeService;
 
-    @Autowired
+    @Resource
     private CaptchaProperties captchaProperties;
 
     private static final String CODE = "code";

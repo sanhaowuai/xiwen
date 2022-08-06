@@ -18,7 +18,7 @@ import com.xiwen.system.api.domain.SysLogininfor;
 @Component
 public class SysRecordLogService
 {
-    @Autowired
+    @Resource
     private RemoteLogService remoteLogService;
 
     /**

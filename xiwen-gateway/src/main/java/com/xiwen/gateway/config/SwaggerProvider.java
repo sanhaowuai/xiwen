@@ -13,6 +13,8 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 import springfox.documentation.swagger.web.SwaggerResource;
 import springfox.documentation.swagger.web.SwaggerResourcesProvider;
 
+import javax.annotation.Resource;
+
 /**
  * 聚合系统接口
  * 
@@ -30,10 +32,10 @@ public class SwaggerProvider implements SwaggerResourcesProvider, WebFluxConfigu
      * 网关路由
      */
     @Lazy
-    @Autowired
+    @Resource
     private RouteLocator routeLocator;
 
-    @Autowired
+    @Resource
     private GatewayProperties gatewayProperties;
 
     /**
