@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import com.xiwen.job.domain.SysJobLog;
 import com.xiwen.job.mapper.SysJobLogMapper;
 
+import javax.annotation.Resource;
+
 /**
  * 定时任务调度日志信息 服务层
  * 

@@ -38,24 +38,24 @@
         <el-divider/>
 
         <h3 class="drawer-title">系统布局配置</h3>
-      
+
         <div class="drawer-item">
-          <span>开启 TopNav</span>
+          <span>开启顶部导航</span>
           <el-switch v-model="topNav" class="drawer-switch" />
         </div>
 
         <div class="drawer-item">
-          <span>开启 Tags-Views</span>
+          <span>开启标签显示</span>
           <el-switch v-model="tagsView" class="drawer-switch" />
         </div>
 
         <div class="drawer-item">
-          <span>固定 Header</span>
+          <span>固定头部</span>
           <el-switch v-model="fixedHeader" class="drawer-switch" />
         </div>
 
         <div class="drawer-item">
-          <span>显示 Logo</span>
+          <span>显示系统名</span>
           <el-switch v-model="sidebarLogo" class="drawer-switch" />
         </div>
 

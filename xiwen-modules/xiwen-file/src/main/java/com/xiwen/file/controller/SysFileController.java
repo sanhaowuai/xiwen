@@ -21,7 +21,7 @@ public class SysFileController
 {
     private static final Logger log = LoggerFactory.getLogger(SysFileController.class);
 
-    @Resource
+    @Autowired
     private ISysFileService sysFileService;
 
     /**

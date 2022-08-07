@@ -34,7 +34,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService
     @Resource(name = "captchaProducerMath")
     private Producer captchaProducerMath;
 
-    @Autowired
+    @Resource
     private RedisService redisService;
 
     @Autowired

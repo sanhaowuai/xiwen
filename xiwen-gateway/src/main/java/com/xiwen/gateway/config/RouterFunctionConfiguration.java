@@ -9,6 +9,8 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import com.xiwen.gateway.handler.ValidateCodeHandler;
 
+import javax.annotation.Resource;
+
 /**
  * 路由配置信息
  * 
@@ -17,7 +19,7 @@ import com.xiwen.gateway.handler.ValidateCodeHandler;
 @Configuration
 public class RouterFunctionConfiguration
 {
-    @Resource
+    @Autowired
     private ValidateCodeHandler validateCodeHandler;
 
     @SuppressWarnings("rawtypes")

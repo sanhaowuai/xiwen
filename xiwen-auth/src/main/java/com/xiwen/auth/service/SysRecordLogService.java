@@ -10,6 +10,8 @@ import com.xiwen.common.core.utils.ip.IpUtils;
 import com.xiwen.system.api.RemoteLogService;
 import com.xiwen.system.api.domain.SysLogininfor;
 
+import javax.annotation.Resource;
+
 /**
  * 记录日志方法
  * 

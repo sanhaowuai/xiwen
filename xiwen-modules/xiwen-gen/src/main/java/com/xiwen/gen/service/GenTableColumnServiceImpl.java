@@ -7,6 +7,8 @@ import com.xiwen.common.core.text.Convert;
 import com.xiwen.gen.domain.GenTableColumn;
 import com.xiwen.gen.mapper.GenTableColumnMapper;
 
+import javax.annotation.Resource;
+
 /**
  * 业务字段 服务层实现
  * 

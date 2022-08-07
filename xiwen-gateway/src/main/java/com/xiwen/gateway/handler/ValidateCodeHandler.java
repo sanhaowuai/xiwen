@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class ValidateCodeHandler implements HandlerFunction<ServerResponse>
 {
-    @Resource
+    @Autowired
     private ValidateCodeService validateCodeService;
 
     @Override

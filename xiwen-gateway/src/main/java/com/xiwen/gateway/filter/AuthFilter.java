@@ -37,7 +37,7 @@ public class AuthFilter implements GlobalFilter, Ordered
     @Autowired
     private IgnoreWhiteProperties ignoreWhite;
 
-    @Autowired
+    @Resource
     private RedisService redisService;
 
 
