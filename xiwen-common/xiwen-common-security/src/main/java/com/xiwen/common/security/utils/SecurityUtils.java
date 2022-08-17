@@ -114,4 +114,11 @@ public class SecurityUtils
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
+
+    public static void main(String[] args) {
+        //$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String temp = passwordEncoder.encode("cqc123");
+        System.out.println(temp);
+    }
 }
