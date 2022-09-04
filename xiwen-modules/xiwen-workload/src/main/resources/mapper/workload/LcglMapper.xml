@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiwen.workload.mapper.LcglMapper">
+
+    <sql id="selectLcglVo">
+	    select lcb.id,lcb.verss,lcb.isdel,lcb.createtime,lcb.createuse,lcb.updatetime,
+            lcb.updatetime,u.user_name updateusername,lcb.updateuse,lcb.kyf,lcb.px,
+            lcb.lcmc,lcb.lcsm,lcb.sfkbh,lcb.bhlx from wf_ywlcb lcb
+        left join sys_user u on lcb.updateuse = u.user_id
+    </sql>
+
+
+    <select id="selectLcglList" parameterType="com.xiwen.workload.domain.Lcgl" resultType="com.xiwen.workload.domain.Lcgl" >
+        <include refid="selectLcglVo"/>
+        where lcb.isdel = 0
+        <if test="lcmc != null and lcmc != ''.toString()">
+            and lcb.lcmc like concat('%', #{lcmc}, '%')
+        </if>
+        order by createtime desc
+    </select>
+
+    <insert id="insertLcgl" parameterType="com.xiwen.workload.domain.Lcgl">
+        insert into wf_ywlcb(id,verss,isdel,createtime,createuse,updatetime,updateuse,kyf,px,
+            lcmc,lcsm,sfkbh,bhlx)
+        values(#{id},1,0,sysdate(),#{createBy},sysdate(),#{createBy},#{kyf},
+            1,#{lcmc},#{lcsm},#{sfkbh},#{bhlx})
+    </insert>
+
+    <update id="updateLcgl" parameterType="com.xiwen.workload.domain.Lcgl">
+        update wf_ywlcb set updatetime=sysdate(),kyf=#{kyf},updateuse=#{createBy},
+            lcmc=#{lcmc},lcsm=#{lcsm},sfkbh=#{sfkbh},bhlx=#{bhlx}
+        where id = #{id}
+    </update>
+
+    <insert id="insertLcjd" parameterType="com.xiwen.workload.domain.Lcgl">
+        insert into wf_ywlcjdb(id,verss,isdel,createtime,createuse,updatetime,updateuse,kyf,px,
+            lcid,jdmc,shjs)
+        values(#{id},1,0,sysdate(),#{createBy},sysdate(),#{createBy},#{kyf},
+            #{px},#{lcid},#{jdmc},#{shjs})
+    </insert>
+
+    <delete id="deleteLcjd" parameterType="com.xiwen.workload.domain.Lcgl">
+        delete from wf_ywlcjdb where lcid=#{lcid}
+    </delete>
+
+    <delete id="deleteLcglById" parameterType="com.xiwen.workload.domain.Lcgl">
+        update wf_ywlcb set isdel=1,updatetime=sysdate(),updateuse=#{createBy} where id=#{id};
+    </delete>
+    <delete id="deleteLcjdByLcid" parameterType="com.xiwen.workload.domain.Lcgl">
+        update wf_ywlcjdb set isdel=1,updatetime=sysdate(),updateuse=#{createBy} where lcid=#{id};
+    </delete>
+
+    <update id="updateLcglStatus" parameterType="com.xiwen.workload.domain.Lcgl">
+        update wf_ywlcb set updatetime=sysdate(),kyf=#{kyf},updateuse=#{createBy}
+        where id=#{id}
+    </update>
+
+    <select id="getLcxxById" parameterType="String" resultType="com.xiwen.workload.domain.Lcgl">
+        select * from wf_ywlcb where id = #{id}
+    </select>
+    <select id="getLcjdByLcid" parameterType="String" resultType="com.xiwen.workload.domain.Lcgl">
+        select * from wf_ywlcjdb where lcid = #{id} and shjs!='-1' order by px
+    </select>
+
+</mapper>

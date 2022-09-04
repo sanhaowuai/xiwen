@@ -45,6 +45,18 @@ public class SysNoticeServiceImpl implements ISysNoticeService
     }
 
     /**
+     * 查询正式的公告列表
+     *
+     * @param notice 公告信息
+     * @return 公告集合
+     */
+    @Override
+    public List<SysNotice> tzggList(SysNotice notice)
+    {
+        return noticeMapper.tzggList(notice);
+    }
+
+    /**
      * 新增公告
      * 
      * @param notice 公告信息

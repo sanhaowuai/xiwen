@@ -48,6 +48,18 @@ public class SysNoticeController extends BaseController
     }
 
     /**
+     * 获取正式的通知公告列表
+     */
+    @GetMapping("/tzggList")
+    public TableDataInfo tzggList(SysNotice notice)
+    {
+        List<SysNotice> list = noticeService.tzggList(notice);
+        return getDataTable(list);
+    }
+
+
+
+    /**
      * 根据通知公告编号获取详细信息
      */
     @RequiresPermissions("system:notice:query")

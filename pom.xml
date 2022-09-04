@@ -250,7 +250,6 @@
         <module>xiwen-modules</module>
         <module>xiwen-api</module>
         <module>xiwen-common</module>
-        <module>xiwen-workload</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -5,8 +5,11 @@ package com.xiwen.common.core.utils.uuid;
  * 
  * @author xiwen
  */
-public class IdUtils
-{
+public class IdUtils {
+
+    private static SnowflakeId idWorker = new SnowflakeId(0, 0);
+
+
     /**
      * 获取随机UUID
      * 
@@ -45,5 +48,15 @@ public class IdUtils
     public static String fastSimpleUUID()
     {
         return UUID.fastUUID().toString(true);
+    }
+
+    /**
+     * @description:获取雪花算法的id
+     * @author: cuiqichao
+     * @date: 2022-08-29 22:18:37
+     * @return: java.lang.String
+    **/
+    public static String getSnowflakeId(){
+        return idWorker.nextId();
     }
 }

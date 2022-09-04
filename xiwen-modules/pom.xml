@@ -13,6 +13,7 @@
         <module>xiwen-gen</module>
         <module>xiwen-job</module>
         <module>xiwen-file</module>
+        <module>xiwen-workload</module>
     </modules>
 
     <artifactId>xiwen-modules</artifactId>
