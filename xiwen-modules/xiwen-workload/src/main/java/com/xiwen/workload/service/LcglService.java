@@ -22,6 +22,7 @@ public interface LcglService {
      * @return: java.util.List<com.xiwen.workload.domain.Lcgl>
     **/
     public List<Lcgl> selectLcglList(Lcgl lcgl);
+    public List<Lcgl> listBySb(Lcgl lcgl);
 
     public Lcgl insertLcgl(Lcgl lcgl);
     public Lcgl updateLcgl(Lcgl lcgl);

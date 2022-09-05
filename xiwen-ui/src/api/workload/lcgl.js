@@ -10,6 +10,14 @@ export function listLcgl(query) {
   })
 }
 
+// 查询流程列表-正式可用
+export function listLcglBySb() {
+  return request({
+    url: '/workload/lcgl/listBySb',
+    method: 'get'
+  })
+}
+
 
 // 新增流程
 export function addLcxx(data) {

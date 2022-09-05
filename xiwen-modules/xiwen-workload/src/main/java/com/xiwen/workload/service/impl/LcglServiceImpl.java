@@ -36,6 +36,10 @@ public class LcglServiceImpl implements LcglService {
     public List<Lcgl> selectLcglList(Lcgl lcgl) {
         return lcglMapper.selectLcglList(lcgl);
     }
+    @Override
+    public List<Lcgl> listBySb(Lcgl lcgl) {
+        return lcglMapper.listBySb(lcgl);
+    }
 
     public Lcgl insertLcgl(Lcgl lcgl){
         lcgl.setId(IdUtils.getSnowflakeId());

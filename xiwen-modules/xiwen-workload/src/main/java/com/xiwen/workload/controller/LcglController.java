@@ -37,6 +37,12 @@ public class LcglController extends BaseController {
         List<Lcgl> list = lcglService.selectLcglList(lcgl);
         return getDataTable(list);
     }
+    @GetMapping("/listBySb")
+    public AjaxResult listBySb(Lcgl lcgl)
+    {
+        List<Lcgl> list = lcglService.listBySb(lcgl);
+        return AjaxResult.success(list);
+    }
 
     @PostMapping("/add")
     public AjaxResult add(@RequestBody Lcgl lcgl){

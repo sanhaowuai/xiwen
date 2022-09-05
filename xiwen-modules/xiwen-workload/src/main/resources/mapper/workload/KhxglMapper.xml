@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiwen.workload.mapper.KhxglMapper">
+
+    <resultMap type="com.xiwen.workload.domain.Khxgl" id="KhxglResult">
+        <result property="id"    column="id"    />
+        <result property="verss"    column="verss"    />
+        <result property="isdel"    column="isdel"    />
+        <result property="createuse"    column="createuse"    />
+        <result property="updateuse"    column="updateuse"    />
+        <result property="kyf"    column="kyf"    />
+        <result property="px"    column="px"    />
+        <result property="sjflx"    column="sjflx"    />
+        <result property="fzlx"    column="fzlx"    />
+        <result property="ysfz"    column="ysfz"    />
+        <result property="khxmc"    column="khxmc"    />
+        <result property="lcid"    column="lcid"    />
+        <result property="pid"    column="pid"    />
+        <result property="ksxz"    column="ksxz"    />
+        <result property="bz"    column="bz"    />
+    </resultMap>
+
+    <sql id="selectKhxglVo">
+        select id, verss, isdel, createtime, createuse, updatetime, updateuse, kyf, px, sjflx, fzlx, ysfz, khxmc, lcid, pid, ksxz, bz from wf_khxb
+    </sql>
+
+    <select id="selectKhxglList" parameterType="com.xiwen.workload.domain.Khxgl" resultMap="KhxglResult">
+        <include refid="selectKhxglVo"/>
+        where isdel=0
+        <if test="sjflx != null  and sjflx != ''"> and sjflx = #{sjflx}</if>
+        <if test="khxmc != null  and khxmc != ''"> and khxmc like concat('%', #{khxmc}, '%')</if>
+    </select>
+
+    <select id="selectKhxglById" parameterType="String" resultMap="KhxglResult">
+        <include refid="selectKhxglVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertKhxgl" parameterType="com.xiwen.workload.domain.Khxgl">
+        insert into wf_khxb
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            verss,
+            isdel,
+            createtime,
+            createuse,
+            updatetime,
+            updateuse,
+            kyf,
+            px,
+            <if test="sjflx != null">sjflx,</if>
+            <if test="fzlx != null">fzlx,</if>
+            <if test="ysfz != null">ysfz,</if>
+            <if test="khxmc != null">khxmc,</if>
+            <if test="lcid != null">lcid,</if>
+            <if test="pid != null">pid,</if>
+            <if test="ksxz != null">ksxz,</if>
+            <if test="bz != null">bz,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id},
+            1,
+            0,
+            sysdate(),
+            #{createuse},
+            sysdate(),
+            #{updateuse},
+            1,
+            1,
+            <if test="sjflx != null">#{sjflx},</if>
+            <if test="fzlx != null">#{fzlx},</if>
+            <if test="ysfz != null">#{ysfz},</if>
+            <if test="khxmc != null">#{khxmc},</if>
+            <if test="lcid != null">#{lcid},</if>
+            <if test="pid != null">#{pid},</if>
+            <if test="ksxz != null">#{ksxz},</if>
+            <if test="bz != null">#{bz},</if>
+        </trim>
+    </insert>
+
+    <update id="updateKhxgl" parameterType="com.xiwen.workload.domain.Khxgl">
+        update wf_khxb
+        <trim prefix="SET" suffixOverrides=",">
+            verss = #{verss},
+            updatetime = sysdate(),
+            updateuse = #{updateuse},
+            <if test="kyf != null">kyf = #{kyf},</if>
+            <if test="px != null">px = #{px},</if>
+            <if test="sjflx != null">sjflx = #{sjflx},</if>
+            <if test="fzlx != null">fzlx = #{fzlx},</if>
+            <if test="ysfz != null">ysfz = #{ysfz},</if>
+            <if test="khxmc != null">khxmc = #{khxmc},</if>
+            <if test="lcid != null">lcid = #{lcid},</if>
+            <if test="pid != null">pid = #{pid},</if>
+            <if test="ksxz != null">ksxz = #{ksxz},</if>
+            <if test="bz != null">bz = #{bz},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteKhxglById" parameterType="java.util.Map">
+        update wf_khxb set isdel=1,updatetime=sysdate(),updateuse=#{updateuse} where id = #{id}
+    </delete>
+
+    <delete id="deleteKhxglByIds" parameterType="java.util.Map">
+        update wf_khxb set isdel=1,updatetime=sysdate(),updateuse=#{updateuse} where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

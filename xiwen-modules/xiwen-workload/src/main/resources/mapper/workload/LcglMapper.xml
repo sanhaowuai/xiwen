@@ -7,7 +7,8 @@
     <sql id="selectLcglVo">
 	    select lcb.id,lcb.verss,lcb.isdel,lcb.createtime,lcb.createuse,lcb.updatetime,
             lcb.updatetime,u.user_name updateusername,lcb.updateuse,lcb.kyf,lcb.px,
-            lcb.lcmc,lcb.lcsm,lcb.sfkbh,lcb.bhlx from wf_ywlcb lcb
+            lcb.lcmc,lcb.lcsm,lcb.sfkbh,lcb.bhlx
+        from wf_ywlcb lcb
         left join sys_user u on lcb.updateuse = u.user_id
     </sql>
 
@@ -18,6 +19,12 @@
         <if test="lcmc != null and lcmc != ''.toString()">
             and lcb.lcmc like concat('%', #{lcmc}, '%')
         </if>
+        order by createtime desc
+    </select>
+    <select id="listBySb" parameterType="com.xiwen.workload.domain.Lcgl" resultType="com.xiwen.workload.domain.Lcgl" >
+        <include refid="selectLcglVo"/>
+        where lcb.isdel = 0
+            and lcb.kyf = 1
         order by createtime desc
     </select>
 

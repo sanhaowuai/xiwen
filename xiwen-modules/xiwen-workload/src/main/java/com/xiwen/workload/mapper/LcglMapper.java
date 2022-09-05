@@ -15,6 +15,7 @@ import java.util.List;
 public interface LcglMapper {
 
     public List<Lcgl> selectLcglList(Lcgl lcgl);
+    public List<Lcgl> listBySb(Lcgl lcgl);
     public void insertLcgl(Lcgl lcgl);
     public void insertLcjd(Lcgl lcgl);
     public void updateLcgl(Lcgl lcgl);
