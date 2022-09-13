@@ -56,7 +56,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2022 xiwen.vip All Rights Reserved.</span>
+      <span>Copyright © 2022 cui.xiwen All Rights Reserved.</span>
     </div>
   </div>
 </template>
@@ -193,8 +193,8 @@ export default {
   color: #bfbfbf;
 }
 .login-code {
-  width: 33%;
-  height: 38px;
+  width: 35%;
+  height: 40px;
   float: right;
   img {
     cursor: pointer;
@@ -214,6 +214,6 @@ export default {
   letter-spacing: 1px;
 }
 .login-code-img {
-  height: 38px;
+  height: 40px;
 }
 </style>

@@ -45,6 +45,11 @@ public class KhxglServiceImpl implements KhxglService
     {
         return khxglMapper.selectKhxglList(khxgl);
     }
+    @Override
+    public List<Khxgl> getKhxlist(Khxgl khxgl)
+    {
+        return khxglMapper.getKhxlist(khxgl);
+    }
 
     /**
      * 新增考核项管理

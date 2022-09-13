@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiwen.workload.mapper.SbglMapper">
+
+    <resultMap type="com.xiwen.workload.domain.Sbgl" id="SbglResult">
+        <result property="id"    column="id"    />
+        <result property="verss"    column="verss"    />
+        <result property="isdel"    column="isdel"    />
+        <result property="createuse"    column="createuse"    />
+        <result property="updateuse"    column="updateuse"    />
+        <result property="lcid"    column="lcid"    />
+        <result property="sqr"    column="sqr"    />
+        <result property="sqlx"    column="sqlx"    />
+        <result property="ksxid"    column="ksxid"    />
+        <result property="gzkssj"    column="gzkssj"    />
+        <result property="gzjssj"    column="gzjssj"    />
+        <result property="gzsc"    column="gzsc"    />
+        <result property="gzjs"    column="gzjs"    />
+        <result property="sqfz"    column="sqfz"    />
+        <result property="shzt"    column="shzt"    />
+    </resultMap>
+
+    <sql id="selectSbglVo">
+        select id, verss, isdel, createtime, createuse, updatetime, updateuse, lcid, sqr, sqlx, ksxid, gzkssj, gzjssj, gzsc, gzjs, sqfz, shzt from wf_sqb_sjfb
+    </sql>
+
+    <select id="queryCyryList" parameterType="com.xiwen.workload.domain.SbCyry" resultType="com.xiwen.workload.domain.SbCyry">
+        SELECT
+            u.nick_name yhxm,u.user_id yhid,
+            dept.dept_name bmmc,
+            TIMESTAMPDIFF(
+                YEAR,
+                u.birthday,
+            CURDATE()) nl,
+            dict.dict_label xbmc
+        FROM
+            sys_user u
+            LEFT JOIN sys_dept dept ON u.dept_id = dept.dept_id
+            LEFT JOIN ( SELECT * FROM sys_dict_data WHERE dict_type = 'sys_user_sex' ) dict ON dict.dict_value = u.sex
+        WHERE u.STATUS = '0' AND u.del_flag = '0' and u.user_name !='admin'
+        <if test="ryxm != null  and ryxm != ''"> and u.nick_name like concat('%', #{ryxm}, '%')</if>
+    </select>
+    <select id="selectSbglList" parameterType="com.xiwen.workload.domain.Sbgl" resultMap="SbglResult">
+        <include refid="selectSbglVo"/>
+        <where>
+            <if test="sqr != null  and sqr != ''"> and sqr = #{sqr}</if>
+            <if test="sqlx != null  and sqlx != ''"> and sqlx = #{sqlx}</if>
+            <if test="ksxid != null  and ksxid != ''"> and ksxid = #{ksxid}</if>
+            <if test="gzjs != null  and gzjs != ''"> and gzjs like concat('%', #{gzjs}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectSbglById" parameterType="String" resultMap="SbglResult">
+        <include refid="selectSbglVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSbgl" parameterType="com.xiwen.workload.domain.Sbgl">
+        insert into wf_sqb_sjfb
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="verss != null">verss,</if>
+            <if test="isdel != null">isdel,</if>
+            <if test="createtime != null">createtime,</if>
+            <if test="createuse != null">createuse,</if>
+            <if test="updatetime != null">updatetime,</if>
+            <if test="updateuse != null">updateuse,</if>
+            <if test="lcid != null">lcid,</if>
+            <if test="sqr != null">sqr,</if>
+            <if test="sqlx != null">sqlx,</if>
+            <if test="ksxid != null">ksxid,</if>
+            <if test="gzkssj != null">gzkssj,</if>
+            <if test="gzjssj != null">gzjssj,</if>
+            <if test="gzsc != null">gzsc,</if>
+            <if test="gzjs != null">gzjs,</if>
+            <if test="sqfz != null">sqfz,</if>
+            <if test="shzt != null">shzt,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="verss != null">#{verss},</if>
+            <if test="isdel != null">#{isdel},</if>
+            <if test="createtime != null">#{createtime},</if>
+            <if test="createuse != null">#{createuse},</if>
+            <if test="updatetime != null">#{updatetime},</if>
+            <if test="updateuse != null">#{updateuse},</if>
+            <if test="lcid != null">#{lcid},</if>
+            <if test="sqr != null">#{sqr},</if>
+            <if test="sqlx != null">#{sqlx},</if>
+            <if test="ksxid != null">#{ksxid},</if>
+            <if test="gzkssj != null">#{gzkssj},</if>
+            <if test="gzjssj != null">#{gzjssj},</if>
+            <if test="gzsc != null">#{gzsc},</if>
+            <if test="gzjs != null">#{gzjs},</if>
+            <if test="sqfz != null">#{sqfz},</if>
+            <if test="shzt != null">#{shzt},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSbgl" parameterType="com.xiwen.workload.domain.Sbgl">
+        update wf_sqb_sjfb
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="verss != null">verss = #{verss},</if>
+            <if test="isdel != null">isdel = #{isdel},</if>
+            <if test="createtime != null">createtime = #{createtime},</if>
+            <if test="createuse != null">createuse = #{createuse},</if>
+            <if test="updatetime != null">updatetime = #{updatetime},</if>
+            <if test="updateuse != null">updateuse = #{updateuse},</if>
+            <if test="lcid != null">lcid = #{lcid},</if>
+            <if test="sqr != null">sqr = #{sqr},</if>
+            <if test="sqlx != null">sqlx = #{sqlx},</if>
+            <if test="ksxid != null">ksxid = #{ksxid},</if>
+            <if test="gzkssj != null">gzkssj = #{gzkssj},</if>
+            <if test="gzjssj != null">gzjssj = #{gzjssj},</if>
+            <if test="gzsc != null">gzsc = #{gzsc},</if>
+            <if test="gzjs != null">gzjs = #{gzjs},</if>
+            <if test="sqfz != null">sqfz = #{sqfz},</if>
+            <if test="shzt != null">shzt = #{shzt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSbglById" parameterType="String">
+        delete from wf_sqb_sjfb where id = #{id}
+    </delete>
+
+    <delete id="deleteSbglByIds" parameterType="String">
+        delete from wf_sqb_sjfb where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -50,6 +50,15 @@ public class KhxglController extends BaseController
         List<Khxgl> list = khxglService.selectKhxglList(khxgl);
         return AjaxResult.success(list);
     }
+    /**
+     * 查询考核项管理列表-正式列表
+     */
+    @GetMapping("/getKhxlist")
+    public AjaxResult getKhxlist(Khxgl khxgl)
+    {
+        List<Khxgl> list = khxglService.getKhxlist(khxgl);
+        return AjaxResult.success(list);
+    }
 
     /**
      * 导出考核项管理列表

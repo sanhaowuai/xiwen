@@ -1,6 +1,15 @@
 import request from '@/utils/request'
 
 // 查询考核项管理列表
+export function listKhxglZs(query) {
+  return request({
+    url: '/workload/khxgl/getKhxlist',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询考核项管理列表
 export function listKhxgl(query) {
   return request({
     url: '/workload/khxgl/list',

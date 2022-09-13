@@ -28,6 +28,7 @@ public interface KhxglService
      * @return 考核项管理集合
      */
     public List<Khxgl> selectKhxglList(Khxgl khxgl);
+    public List<Khxgl> getKhxlist(Khxgl khxgl);
 
     /**
      * 新增考核项管理

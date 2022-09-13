@@ -26,6 +26,11 @@
         select id, verss, isdel, createtime, createuse, updatetime, updateuse, kyf, px, sjflx, fzlx, ysfz, khxmc, lcid, pid, ksxz, bz from wf_khxb
     </sql>
 
+    <select id="getKhxlist" parameterType="com.xiwen.workload.domain.Khxgl" resultMap="KhxglResult">
+        <include refid="selectKhxglVo"/>
+        where isdel=0 and kyf=1
+        <if test="sjflx != null  and sjflx != ''"> and sjflx = #{sjflx}</if>
+    </select>
     <select id="selectKhxglList" parameterType="com.xiwen.workload.domain.Khxgl" resultMap="KhxglResult">
         <include refid="selectKhxglVo"/>
         where isdel=0
