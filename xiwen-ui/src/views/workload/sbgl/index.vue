@@ -138,6 +138,7 @@
       <div style="margin-bottom: 5px;text-align: right;">
         姓名：<el-input type="text" style="width: 160px;" size="small" v-model="queryCyryParams.queryCyrXm" ></el-input>
         <el-button style="margin-left: 10px;margin-top: 2px;" type="primary" icon="el-icon-search" size="small" @click="queryCyryTableList">搜索</el-button>
+        <el-button style="margin-left: 10px;margin-top: 2px;" type="success" icon="el-icon-user" size="small" @click="saveCyry">确定</el-button>
       </div>
       <div style="margin-top: 10px;margin-bottom: 21px;">
         <el-table height="400" ref="cyryMultipleTable" :row-key="getRowKeyYhid"
@@ -340,6 +341,32 @@
       this.getList();
     },
     methods: {
+      //选择参与人员后确定
+      saveCyry(){
+        this.cyryList = []
+        this.cyryTempList.forEach((row) => {
+          let tempRow = JSON.parse(JSON.stringify(row))
+          tempRow.yhdm = tempRow.yhid
+          tempRow.xm = tempRow.ryxm
+          tempRow.df = tempRow.ryxm
+          tempRow.gznr = ''
+          this.cyryList.push(tempRow)
+        })
+      },
+      //计算平均分
+      average(value,amount,point){
+        if(!point){
+          point = 2
+        }
+        let list = []
+        let first = (Math.floor((value/amount)*Math.pow(10,point))/Math.pow(10,point)).toFixed(point)
+        let last = (value - first*(amount - 1)).toFixed(point)
+        for(let i = 0;i<amount-1;i++){
+          list.push(first)
+        }
+        list.push(last)
+        return list
+      },
 
       getRowKeyYhid(row){
         return row.yhid
@@ -374,15 +401,16 @@
       },
       // 更新勾选标记
       updateMark() {
-        console.log(JSON.stringify(this.cyryTempList),'this.cyryTempList')
         let selectedMarkList = this.cyryTempList.map((item) => item.yhid);
-        console.log(JSON.stringify(selectedMarkList),'selectedMarkList')
-        console.log(JSON.stringify(this.cyryTableList),'this.cyryTableList')
         this.cyryTableList.forEach((row) => {
           if (selectedMarkList.includes(row.yhid)) {
             // toggleRowSelection 需在$nextTick中使用！
             this.$nextTick(() => {
               this.$refs.cyryMultipleTable.toggleRowSelection(row,true);
+            });
+          }else{
+            this.$nextTick(() => {
+              this.$refs.cyryMultipleTable.toggleRowSelection(row,false);
             });
           }
         });
