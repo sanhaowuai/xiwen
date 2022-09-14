@@ -3,10 +3,10 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="60px">
       <el-form-item label="申报人" prop="sqr">
         <el-input style="width: 140px"
-          v-model="queryParams.sqr"
-          placeholder="请输入申报人"
-          clearable
-          @keyup.enter.native="handleQuery"
+                  v-model="queryParams.sqr"
+                  placeholder="请输入申报人"
+                  clearable
+                  @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="类型" prop="sqlx">
@@ -210,7 +210,7 @@
         <el-form-item label="参与人" prop="sqfz" class="el-form-item-margin">
           <slot>
             <el-button type="primary" plain icon="el-icon-plus" style="padding: 6px 9px;" title="添加参与人"
-                                @click="showCyrDialog" size="mini" ></el-button>
+                       @click="showCyrDialog" size="mini" ></el-button>
           </slot>
           <table border="1" style="border-collapse: collapse;text-align: center;">
             <tr>
@@ -221,11 +221,11 @@
             </tr>
             <template v-for="item in cyryList">
               <tr>
-                <td>{{item.xm}}</td>
+                <td>{{item.yhxm}}</td>
                 <td><el-input-number size="mini" v-model="item.df" style="width: 100px;" :min="0.01"></el-input-number></td>
                 <td><el-input v-model="item.gznr" placeholder="请输入工作内容" style="width: 295px"/></td>
                 <td><el-button type="danger" plain icon="el-icon-delete" style="padding: 6px 9px;"
-                     @click="handleDelete" size="mini" ></el-button></td>
+                               @click="handleDelete" size="mini" ></el-button></td>
               </tr>
             </template>
           </table>
@@ -287,16 +287,22 @@
         cyryTableList:[],
         // 参与人员
         cyryList: [{
-          yhdm:'abc',
-          xm:'张三风',
+          yhid:'2',
+          yhxm:'张三风',
+          bmmc:'A部门',
+          nl:'45',
+          xbmc:'男',
           df:12,
-          gznr:'23'
+          gznr:'23sdff'
         },
           {
-            yhdm:'abc',
-            xm:'张三风1',
-            df:12,
-            gznr:'23'
+            yhid:'3',
+            yhxm:'李四',
+            bmmc:'B部门',
+            nl:'36',
+            xbmc:'男',
+            df:2,
+            gznr:'23222'
           }],
         // 考核项管理树选项
         khxglOptions: [],
@@ -348,8 +354,7 @@
           let tempRow = JSON.parse(JSON.stringify(row))
           tempRow.yhdm = tempRow.yhid
           tempRow.xm = tempRow.ryxm
-          tempRow.df = tempRow.ryxm
-          tempRow.gznr = ''
+          tempRow.df = 0.01
           this.cyryList.push(tempRow)
         })
       },
@@ -469,6 +474,11 @@
       showCyrDialog(){
         this.showCyrDialogSf = true
         this.cyryTempList = []
+        this.cyryList.forEach((item) => {
+          let tempRow = JSON.parse(JSON.stringify(item))
+          tempRow.yhid =
+          this.cyryTempList.push(item)
+        })
         this.queryCyryTableList()
       },
 
@@ -495,14 +505,14 @@
       },
       /** 转换菜单数据结构 */
       normalizer(node) {
-        // if (node.children && !node.children.length) {
-        //   delete node.children;
-        // }
-        // return {
-        //   id: node.menuId,
-        //   label: node.menuName,
-        //   children: node.children
-        // };
+        if (node.children && !node.children.length) {
+          delete node.children;
+        }
+        return {
+          id: node.id,
+          label: node.khxmc,
+          children: node.children
+        };
       },
       // 取消按钮
       cancel() {
