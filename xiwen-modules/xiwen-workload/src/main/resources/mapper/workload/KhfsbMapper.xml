@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiwen.workload.mapper.KhfsbMapper">
+
+    <resultMap type="Khfsb" id="KhfsbResult">
+        <result property="id"    column="id"    />
+        <result property="verss"    column="verss"    />
+        <result property="isdel"    column="isdel"    />
+        <result property="createtime"    column="createtime"    />
+        <result property="createuse"    column="createuse"    />
+        <result property="updatetime"    column="updatetime"    />
+        <result property="updateuse"    column="updateuse"    />
+        <result property="yhid"    column="yhid"    />
+        <result property="nd"    column="nd"    />
+        <result property="zfs"    column="zfs"    />
+    </resultMap>
+
+    <resultMap id="KhfsbKhfsxqbResult" type="Khfsb" extends="KhfsbResult">
+        <collection property="khfsxqbList" notNullColumn="sub_id" javaType="java.util.List" resultMap="KhfsxqbResult" />
+    </resultMap>
+
+    <resultMap type="Khfsxqb" id="KhfsxqbResult">
+        <result property="id"    column="sub_id"    />
+        <result property="verss"    column="sub_verss"    />
+        <result property="isdel"    column="sub_isdel"    />
+        <result property="createtime"    column="sub_createtime"    />
+        <result property="createuse"    column="sub_createuse"    />
+        <result property="updatetime"    column="sub_updatetime"    />
+        <result property="updateuse"    column="sub_updateuse"    />
+        <result property="rykhfsbid"    column="sub_rykhfsbid"    />
+        <result property="fslx"    column="sub_fslx"    />
+        <result property="fs"    column="sub_fs"    />
+        <result property="ywid"    column="sub_ywid"    />
+        <result property="bz"    column="sub_bz"    />
+    </resultMap>
+
+    <sql id="selectKhfsbVo">
+        select id, verss, isdel, createtime, createuse, updatetime, updateuse, yhid, nd, zfs from wf_rykhfsb
+    </sql>
+
+    <select id="selectKhfsbList" parameterType="Khfsb" resultMap="KhfsbResult">
+        <include refid="selectKhfsbVo"/>
+        <where>
+            <if test="yhid != null  and yhid != ''"> and yhid like concat('%', #{yhid}, '%')</if>
+            <if test="nd != null  and nd != ''"> and nd = #{nd}</if>
+            <if test="zfs != null "> and zfs = #{zfs}</if>
+        </where>
+    </select>
+
+    <select id="selectKhfsbById" parameterType="String" resultMap="KhfsbKhfsxqbResult">
+        select a.id, a.verss, a.isdel, a.createtime, a.createuse, a.updatetime, a.updateuse, a.yhid, a.nd, a.zfs,
+ b.id as sub_id, b.verss as sub_verss, b.isdel as sub_isdel, b.createtime as sub_createtime, b.createuse as sub_createuse, b.updatetime as sub_updatetime, b.updateuse as sub_updateuse, b.rykhfsbid as sub_rykhfsbid, b.fslx as sub_fslx, b.fs as sub_fs, b.ywid as sub_ywid, b.bz as sub_bz
+        from wf_rykhfsb a
+        left join wf_rykhfsxqb b on b.rykhfsbid = a.id
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertKhfsb" parameterType="Khfsb">
+        insert into wf_rykhfsb
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="verss != null">verss,</if>
+            <if test="isdel != null">isdel,</if>
+            <if test="createtime != null">createtime,</if>
+            <if test="createuse != null">createuse,</if>
+            <if test="updatetime != null">updatetime,</if>
+            <if test="updateuse != null">updateuse,</if>
+            <if test="yhid != null">yhid,</if>
+            <if test="nd != null">nd,</if>
+            <if test="zfs != null">zfs,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="verss != null">#{verss},</if>
+            <if test="isdel != null">#{isdel},</if>
+            <if test="createtime != null">#{createtime},</if>
+            <if test="createuse != null">#{createuse},</if>
+            <if test="updatetime != null">#{updatetime},</if>
+            <if test="updateuse != null">#{updateuse},</if>
+            <if test="yhid != null">#{yhid},</if>
+            <if test="nd != null">#{nd},</if>
+            <if test="zfs != null">#{zfs},</if>
+        </trim>
+    </insert>
+
+    <update id="updateKhfsb" parameterType="Khfsb">
+        update wf_rykhfsb
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="verss != null">verss = #{verss},</if>
+            <if test="isdel != null">isdel = #{isdel},</if>
+            <if test="createtime != null">createtime = #{createtime},</if>
+            <if test="createuse != null">createuse = #{createuse},</if>
+            <if test="updatetime != null">updatetime = #{updatetime},</if>
+            <if test="updateuse != null">updateuse = #{updateuse},</if>
+            <if test="yhid != null">yhid = #{yhid},</if>
+            <if test="nd != null">nd = #{nd},</if>
+            <if test="zfs != null">zfs = #{zfs},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteKhfsbById" parameterType="String">
+        delete from wf_rykhfsb where id = #{id}
+    </delete>
+
+    <delete id="deleteKhfsbByIds" parameterType="String">
+        delete from wf_rykhfsb where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteKhfsxqbByRykhfsbids" parameterType="String">
+        delete from wf_rykhfsxqb where rykhfsbid in
+        <foreach item="rykhfsbid" collection="array" open="(" separator="," close=")">
+            #{rykhfsbid}
+        </foreach>
+    </delete>
+
+    <delete id="deleteKhfsxqbByRykhfsbid" parameterType="String">
+        delete from wf_rykhfsxqb where rykhfsbid = #{rykhfsbid}
+    </delete>
+
+    <insert id="batchKhfsxqb">
+        insert into wf_rykhfsxqb( id, verss, isdel, createtime, createuse, updatetime, updateuse, rykhfsbid, fslx, fs, ywid, bz) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.verss}, #{item.isdel}, #{item.createtime}, #{item.createuse}, #{item.updatetime}, #{item.updateuse}, #{item.rykhfsbid}, #{item.fslx}, #{item.fs}, #{item.ywid}, #{item.bz})
+        </foreach>
+    </insert>
+</mapper>

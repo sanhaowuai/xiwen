@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiwen.workload.mapper.KhfsxqbMapper">
+
+    <resultMap type="Khfsxqb" id="KhfsxqbResult">
+        <result property="id"    column="id"    />
+        <result property="verss"    column="verss"    />
+        <result property="isdel"    column="isdel"    />
+        <result property="createtime"    column="createtime"    />
+        <result property="createuse"    column="createuse"    />
+        <result property="updatetime"    column="updatetime"    />
+        <result property="updateuse"    column="updateuse"    />
+        <result property="rykhfsbid"    column="rykhfsbid"    />
+        <result property="fslx"    column="fslx"    />
+        <result property="fs"    column="fs"    />
+        <result property="ywid"    column="ywid"    />
+        <result property="bz"    column="bz"    />
+    </resultMap>
+
+    <sql id="selectKhfsxqbVo">
+        select id, verss, isdel, createtime, createuse, updatetime, updateuse, rykhfsbid, fslx, fs, ywid, bz from wf_rykhfsxqb
+    </sql>
+
+    <select id="selectKhfsxqbList" parameterType="Khfsxqb" resultMap="KhfsxqbResult">
+        <include refid="selectKhfsxqbVo"/>
+        <where>
+            <if test="rykhfsbid != null  and rykhfsbid != ''"> and rykhfsbid = #{rykhfsbid}</if>
+            <if test="fslx != null  and fslx != ''"> and fslx = #{fslx}</if>
+            <if test="fs != null "> and fs = #{fs}</if>
+            <if test="ywid != null  and ywid != ''"> and ywid = #{ywid}</if>
+            <if test="bz != null  and bz != ''"> and bz = #{bz}</if>
+        </where>
+    </select>
+
+    <select id="selectKhfsxqbById" parameterType="String" resultMap="KhfsxqbResult">
+        <include refid="selectKhfsxqbVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertKhfsxqb" parameterType="Khfsxqb">
+        insert into wf_rykhfsxqb
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="verss != null">verss,</if>
+            <if test="isdel != null">isdel,</if>
+            <if test="createtime != null">createtime,</if>
+            <if test="createuse != null">createuse,</if>
+            <if test="updatetime != null">updatetime,</if>
+            <if test="updateuse != null">updateuse,</if>
+            <if test="rykhfsbid != null">rykhfsbid,</if>
+            <if test="fslx != null">fslx,</if>
+            <if test="fs != null">fs,</if>
+            <if test="ywid != null">ywid,</if>
+            <if test="bz != null">bz,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="verss != null">#{verss},</if>
+            <if test="isdel != null">#{isdel},</if>
+            <if test="createtime != null">#{createtime},</if>
+            <if test="createuse != null">#{createuse},</if>
+            <if test="updatetime != null">#{updatetime},</if>
+            <if test="updateuse != null">#{updateuse},</if>
+            <if test="rykhfsbid != null">#{rykhfsbid},</if>
+            <if test="fslx != null">#{fslx},</if>
+            <if test="fs != null">#{fs},</if>
+            <if test="ywid != null">#{ywid},</if>
+            <if test="bz != null">#{bz},</if>
+        </trim>
+    </insert>
+
+    <update id="updateKhfsxqb" parameterType="Khfsxqb">
+        update wf_rykhfsxqb
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="verss != null">verss = #{verss},</if>
+            <if test="isdel != null">isdel = #{isdel},</if>
+            <if test="createtime != null">createtime = #{createtime},</if>
+            <if test="createuse != null">createuse = #{createuse},</if>
+            <if test="updatetime != null">updatetime = #{updatetime},</if>
+            <if test="updateuse != null">updateuse = #{updateuse},</if>
+            <if test="rykhfsbid != null">rykhfsbid = #{rykhfsbid},</if>
+            <if test="fslx != null">fslx = #{fslx},</if>
+            <if test="fs != null">fs = #{fs},</if>
+            <if test="ywid != null">ywid = #{ywid},</if>
+            <if test="bz != null">bz = #{bz},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteKhfsxqbById" parameterType="String">
+        delete from wf_rykhfsxqb where id = #{id}
+    </delete>
+
+    <delete id="deleteKhfsxqbByIds" parameterType="String">
+        delete from wf_rykhfsxqb where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
