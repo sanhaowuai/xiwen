@@ -29,6 +29,8 @@ public interface SbglService
      */
     public List<Sbgl> selectSbglList(Sbgl sbgl);
     public List<SbCyry> queryCyryList(SbCyry sbCyry);
+    public List<SbCyry> querySbcyryList(Sbgl sbgl);
+    public SbCyry getUserByDlr(SbCyry sbCyry);
 
     /**
      * 新增申报管理
@@ -39,7 +41,7 @@ public interface SbglService
     public int insertSbgl(Sbgl sbgl);
 
     /**
-     * 修改申报管理
+     * 新增、修改申报管理
      *
      * @param sbgl 申报管理
      * @return 结果

@@ -1,6 +1,8 @@
 package com.xiwen.workload.domain;
 
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -28,9 +30,24 @@ public class Sbgl extends BaseEntity
 
     /** 创建人 */
     private String createuse;
+    /** 创建人 */
+    private List<SbCyry> cyryTList;
 
     /** 修改人 */
     private String updateuse;
+    /** 流程名称 */
+    private String lcmc;
+    /** 考核项名称 */
+    private String khxmc;
+    /** 申请人姓名 */
+    private String sqrxm;
+    /** 审核状态名称 */
+    private String shztmc;
+    /** 申请类型名称 */
+    private String sqlxmc;
+    /** 申请时间 */
+    private String sbsj;
+
 
     /** 流程id wf_ywlcb.id */
     @Excel(name = "流程id wf_ywlcb.id")
@@ -73,6 +90,61 @@ public class Sbgl extends BaseEntity
     /** 审核状态 字典表flow_status */
     @Excel(name = "审核状态 字典表flow_status")
     private String shzt;
+
+    public String getSbsj() {
+        return sbsj;
+    }
+
+    public void setSbsj(String sbsj) {
+        this.sbsj = sbsj;
+    }
+
+    public String getLcmc() {
+        return lcmc;
+    }
+
+    public String getKhxmc() {
+        return khxmc;
+    }
+
+    public String getSqrxm() {
+        return sqrxm;
+    }
+
+    public String getShztmc() {
+        return shztmc;
+    }
+
+    public String getSqlxmc() {
+        return sqlxmc;
+    }
+    public void setLcmc(String lcmc) {
+        this.lcmc = lcmc;
+    }
+
+    public void setKhxmc(String khxmc) {
+        this.khxmc = khxmc;
+    }
+
+    public void setSqrxm(String sqrxm) {
+        this.sqrxm = sqrxm;
+    }
+
+    public void setShztmc(String shztmc) {
+        this.shztmc = shztmc;
+    }
+
+    public void setSqlxmc(String sqlxmc) {
+        this.sqlxmc = sqlxmc;
+    }
+
+    public List<SbCyry> getCyryTList() {
+        return cyryTList;
+    }
+
+    public void setCyryTList(List<SbCyry> cyryTList) {
+        this.cyryTList = cyryTList;
+    }
 
     public void setId(String id)
     {

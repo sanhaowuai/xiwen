@@ -20,12 +20,33 @@
         <result property="gzjs"    column="gzjs"    />
         <result property="sqfz"    column="sqfz"    />
         <result property="shzt"    column="shzt"    />
+        <result property="lcmc"    column="lcmc"    />
+        <result property="khxmc"    column="khxmc"    />
+        <result property="sqrxm"    column="sqrxm"    />
+        <result property="shztmc"    column="shztmc"    />
+        <result property="sqlxmc"    column="sqlxmc"    />
     </resultMap>
 
     <sql id="selectSbglVo">
         select id, verss, isdel, createtime, createuse, updatetime, updateuse, lcid, sqr, sqlx, ksxid, gzkssj, gzjssj, gzsc, gzjs, sqfz, shzt from wf_sqb_sjfb
     </sql>
-
+    <!--查询某个参与人员-->
+    <select id="getUserByDlr" parameterType="com.xiwen.workload.domain.SbCyry" resultType="com.xiwen.workload.domain.SbCyry">
+        SELECT
+            u.nick_name yhxm,u.user_id yhid,
+            dept.dept_name bmmc,
+            TIMESTAMPDIFF(
+                YEAR,
+                u.birthday,
+            CURDATE()) nl,
+            dict.dict_label xbmc
+        FROM
+            sys_user u
+            LEFT JOIN sys_dept dept ON u.dept_id = dept.dept_id
+            LEFT JOIN ( SELECT * FROM sys_dict_data WHERE dict_type = 'sys_user_sex' ) dict ON dict.dict_value = u.sex
+        WHERE u.user_id = #{yhid}
+    </select>
+    <!--查询参与人员列表数据-->
     <select id="queryCyryList" parameterType="com.xiwen.workload.domain.SbCyry" resultType="com.xiwen.workload.domain.SbCyry">
         SELECT
             u.nick_name yhxm,u.user_id yhid,
@@ -41,84 +62,84 @@
             LEFT JOIN ( SELECT * FROM sys_dict_data WHERE dict_type = 'sys_user_sex' ) dict ON dict.dict_value = u.sex
         WHERE u.STATUS = '0' AND u.del_flag = '0' and u.user_name !='admin'
         <if test="ryxm != null  and ryxm != ''"> and u.nick_name like concat('%', #{ryxm}, '%')</if>
+         order by nick_name
     </select>
-    <select id="selectSbglList" parameterType="com.xiwen.workload.domain.Sbgl" resultMap="SbglResult">
-        <include refid="selectSbglVo"/>
-        <where>
-            <if test="sqr != null  and sqr != ''"> and sqr = #{sqr}</if>
-            <if test="sqlx != null  and sqlx != ''"> and sqlx = #{sqlx}</if>
-            <if test="ksxid != null  and ksxid != ''"> and ksxid = #{ksxid}</if>
-            <if test="gzjs != null  and gzjs != ''"> and gzjs like concat('%', #{gzjs}, '%')</if>
-        </where>
+    <!--查询申报表单中已选的参与人员-->
+    <select id="querySbcyryList" parameterType="com.xiwen.workload.domain.Sbgl" resultType="com.xiwen.workload.domain.SbCyry">
+        SELECT
+            u.nick_name yhxm,u.user_id yhid,
+            dept.dept_name bmmc,
+            TIMESTAMPDIFF(
+                YEAR,
+                u.birthday,
+            CURDATE()) nl,cyryb.df,cyryb.gznr,cyryb.bmid,
+            dict.dict_label xbmc
+        FROM wf_sqb_cyrb cyryb
+            left join sys_user u on cyryb.yhid = u.user_id
+            LEFT JOIN sys_dept dept ON u.dept_id = dept.dept_id
+            LEFT JOIN ( SELECT * FROM sys_dict_data WHERE dict_type = 'sys_user_sex' ) dict ON dict.dict_value = u.sex
+        WHERE  cyryb.sqid = #{id} and cyryb.isdel = 0
+        order by id
+    </select>
+    <select id="selectSbglList" parameterType="com.xiwen.workload.domain.Sbgl" resultType="com.xiwen.workload.domain.Sbgl">
+        select sjfb.id, sjfb.verss, sjfb.isdel, sjfb.createtime, sjfb.createuse,
+            sjfb.updatetime, sjfb.updateuse,DATE_FORMAT(sjfb.createtime,'%Y-%m-%d') sbsj,
+            sjfb.gzkssj, sjfb.gzjssj, sjfb.gzsc, sjfb.gzjs,sjfb.sqfz,
+            sjfb.shzt,dicta.dict_label shztmc,
+            sjfb.sqlx,dictb.dict_label sqlxmc,
+            sjfb.sqr,u.nick_name sqrxm,
+            sjfb.ksxid,khxb.khxmc,
+            sjfb.lcid,ywlcb.lcmc
+         from wf_sqb_sjfb sjfb
+         left join wf_khxb khxb on khxb.id = sjfb.ksxid
+         left join wf_ywlcb ywlcb on ywlcb.id = khxb.lcid
+         left join sys_user u on sjfb.sqr = u.user_id
+         left join (select * from sys_dict_data where dict_type = 'workload_khxlx') dictb on dictb.dict_value = sjfb.sqlx
+         left join (select * from sys_dict_data where dict_type = 'flow_status') dicta on dicta.dict_value = sjfb.shzt
+        where sjfb.isdel=0
+            <if test="sqr != null  and sqr != ''"> and sjfb.sqr = #{sqr}</if>
+            <if test="sqlx != null  and sqlx != ''"> and sjfb.sqlx = #{sqlx}</if>
+            <if test="ksxid != null  and ksxid != ''"> and sjfb.ksxid = #{ksxid}</if>
+            <if test="gzjs != null  and gzjs != ''"> and sjfb.gzjs like concat('%', #{gzjs}, '%')</if>
+        order by sjfb.createtime desc
     </select>
 
     <select id="selectSbglById" parameterType="String" resultMap="SbglResult">
-        <include refid="selectSbglVo"/>
-        where id = #{id}
+        select sjfb.id, sjfb.verss, sjfb.isdel, sjfb.createtime, sjfb.createuse, sjfb.updatetime,
+        sjfb.updateuse, sjfb.lcid, sjfb.sqr, sjfb.sqlx, sjfb.ksxid,
+        sjfb.gzkssj, sjfb.gzjssj, sjfb.gzsc, sjfb.gzjs, sjfb.sqfz, sjfb.shzt
+        from wf_sqb_sjfb sjfb
+        where sjfb.id = #{id}
     </select>
 
     <insert id="insertSbgl" parameterType="com.xiwen.workload.domain.Sbgl">
         insert into wf_sqb_sjfb
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
-            <if test="verss != null">verss,</if>
-            <if test="isdel != null">isdel,</if>
-            <if test="createtime != null">createtime,</if>
-            <if test="createuse != null">createuse,</if>
-            <if test="updatetime != null">updatetime,</if>
-            <if test="updateuse != null">updateuse,</if>
-            <if test="lcid != null">lcid,</if>
-            <if test="sqr != null">sqr,</if>
-            <if test="sqlx != null">sqlx,</if>
-            <if test="ksxid != null">ksxid,</if>
-            <if test="gzkssj != null">gzkssj,</if>
-            <if test="gzjssj != null">gzjssj,</if>
-            <if test="gzsc != null">gzsc,</if>
-            <if test="gzjs != null">gzjs,</if>
-            <if test="sqfz != null">sqfz,</if>
-            <if test="shzt != null">shzt,</if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
-            <if test="verss != null">#{verss},</if>
-            <if test="isdel != null">#{isdel},</if>
-            <if test="createtime != null">#{createtime},</if>
-            <if test="createuse != null">#{createuse},</if>
-            <if test="updatetime != null">#{updatetime},</if>
-            <if test="updateuse != null">#{updateuse},</if>
-            <if test="lcid != null">#{lcid},</if>
-            <if test="sqr != null">#{sqr},</if>
-            <if test="sqlx != null">#{sqlx},</if>
-            <if test="ksxid != null">#{ksxid},</if>
-            <if test="gzkssj != null">#{gzkssj},</if>
-            <if test="gzjssj != null">#{gzjssj},</if>
-            <if test="gzsc != null">#{gzsc},</if>
-            <if test="gzjs != null">#{gzjs},</if>
-            <if test="sqfz != null">#{sqfz},</if>
-            <if test="shzt != null">#{shzt},</if>
-        </trim>
+            (id,verss,isdel,createtime,createuse,updatetime,updateuse,lcid,
+            sqr,sqlx,ksxid,gzkssj,gzjssj,
+            gzsc,gzjs,sqfz,shzt)
+        values (#{id},1,0,sysdate(),#{createuse},sysdate(),#{updateuse},(select lcid from wf_khxb where id=#{ksxid}),
+            #{sqr},#{sqlx},#{ksxid},#{gzkssj},#{gzjssj},
+            #{gzsc},#{gzjs},#{sqfz},#{shzt}
+        )
+    </insert>
+    <!-- 插入参与人员-->
+    <insert id="insertSbCyry" parameterType="com.xiwen.workload.domain.SbCyry">
+        insert into wf_sqb_cyrb
+            (id,verss,isdel,createtime,updatetime,
+            sqid,yhid,df,gznr,bmid)
+        values (#{id},1,0,sysdate(),sysdate(),
+            #{sqid},#{yhid},#{df},#{gznr},(select dept_id from sys_user where user_id=#{yhid})
+        )
     </insert>
 
+    <delete id="deleteSbcyry" parameterType="com.xiwen.workload.domain.Sbgl">
+        delete from wf_sqb_cyrb where sqid = #{id}
+    </delete>
+
     <update id="updateSbgl" parameterType="com.xiwen.workload.domain.Sbgl">
-        update wf_sqb_sjfb
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="verss != null">verss = #{verss},</if>
-            <if test="isdel != null">isdel = #{isdel},</if>
-            <if test="createtime != null">createtime = #{createtime},</if>
-            <if test="createuse != null">createuse = #{createuse},</if>
-            <if test="updatetime != null">updatetime = #{updatetime},</if>
-            <if test="updateuse != null">updateuse = #{updateuse},</if>
-            <if test="lcid != null">lcid = #{lcid},</if>
-            <if test="sqr != null">sqr = #{sqr},</if>
-            <if test="sqlx != null">sqlx = #{sqlx},</if>
-            <if test="ksxid != null">ksxid = #{ksxid},</if>
-            <if test="gzkssj != null">gzkssj = #{gzkssj},</if>
-            <if test="gzjssj != null">gzjssj = #{gzjssj},</if>
-            <if test="gzsc != null">gzsc = #{gzsc},</if>
-            <if test="gzjs != null">gzjs = #{gzjs},</if>
-            <if test="sqfz != null">sqfz = #{sqfz},</if>
-            <if test="shzt != null">shzt = #{shzt},</if>
-        </trim>
+        update wf_sqb_sjfb set updatetime = sysdate(),updateuse = #{updateuse},lcid = (select lcid from wf_khxb where id=#{ksxid}),
+            sqlx = #{sqlx},ksxid = #{ksxid},gzkssj = #{gzkssj}, gzjssj = #{gzjssj},
+            gzsc = #{gzsc}, gzjs = #{gzjs}, sqfz = #{sqfz}, shzt = #{shzt}
         where id = #{id}
     </update>
 

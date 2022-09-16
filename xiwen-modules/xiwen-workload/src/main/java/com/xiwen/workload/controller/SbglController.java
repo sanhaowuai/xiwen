@@ -4,8 +4,10 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import com.xiwen.common.security.utils.SecurityUtils;
 import com.xiwen.workload.domain.SbCyry;
 import com.xiwen.workload.service.SbglService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import com.xiwen.common.log.annotation.Log;
 import com.xiwen.common.log.enums.BusinessType;
@@ -50,6 +52,18 @@ public class SbglController extends BaseController
         List<SbCyry> list = sbglService.queryCyryList(sbCyry);
         return getDataTable(list);
     }
+    //获取登录人信息
+    @GetMapping("/getUserByDlr")
+    public AjaxResult getUserByDlr(String yhid)
+    {
+        SbCyry sbCyry = new SbCyry();
+        if(StringUtils.isNotBlank(yhid)){
+            sbCyry.setYhid(yhid);
+        }else{
+            sbCyry.setYhid(SecurityUtils.getUserId()+"");
+        }
+        return AjaxResult.success(sbglService.getUserByDlr(sbCyry));
+    }
 
     /**
      * 导出申报管理列表
@@ -71,7 +85,20 @@ public class SbglController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id)
     {
-        return AjaxResult.success(sbglService.selectSbglById(id));
+        Sbgl sbgl = sbglService.selectSbglById(id);
+        sbgl.setCyryTList(sbglService.querySbcyryList(sbgl));
+        return AjaxResult.success(sbgl);
+    }
+    /**
+     * 获取申报表单中参与人员list
+     */
+    @GetMapping(value = "querySbcyryList")
+    public AjaxResult querySbcyryList(String id)
+    {
+        Sbgl sbgl = new Sbgl();
+        sbgl.setId(id);
+        List<SbCyry> sbCyryList= sbglService.querySbcyryList(sbgl);
+        return AjaxResult.success(sbCyryList);
     }
 
     /**
@@ -86,14 +113,18 @@ public class SbglController extends BaseController
     }
 
     /**
-     * 修改申报管理
+     * 新增、修改申报管理
      */
     @RequiresPermissions("workload:sbgl:edit")
     @Log(title = "申报管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Sbgl sbgl)
     {
-        return toAjax(sbglService.updateSbgl(sbgl));
+        sbgl.setCreateuse(SecurityUtils.getUserId()+"");
+        sbgl.setUpdateuse(SecurityUtils.getUserId()+"");
+        sbgl.setSqr(SecurityUtils.getUserId()+"");
+        int resInt = sbglService.updateSbgl(sbgl);
+        return toAjax(resInt);
     }
 
     /**

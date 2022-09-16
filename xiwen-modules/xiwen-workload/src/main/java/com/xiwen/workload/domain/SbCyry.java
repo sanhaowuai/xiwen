@@ -10,12 +10,48 @@ package com.xiwen.workload.domain;
  */
 public class SbCyry {
 
+    private String sqid;
+    private String id;
     private String yhid;
     private String ryxm;
     private String yhxm;
     private String xbmc;
     private String nl;
+    private String df;
+    private String gznr;
     private String bmmc;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getSqid() {
+        return sqid;
+    }
+
+    public void setSqid(String sqid) {
+        this.sqid = sqid;
+    }
+
+    public String getDf() {
+        return df;
+    }
+
+    public void setDf(String df) {
+        this.df = df;
+    }
+
+    public String getGznr() {
+        return gznr;
+    }
+
+    public void setGznr(String gznr) {
+        this.gznr = gznr;
+    }
 
     public String getYhid() {
         return yhid;

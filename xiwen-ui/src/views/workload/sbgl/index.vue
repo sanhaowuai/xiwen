@@ -10,7 +10,7 @@
         />
       </el-form-item>
       <el-form-item label="类型" prop="sqlx">
-        <el-select v-model="queryParams.sqlx" style="width: 150px"
+        <el-select v-model="queryParams.sqlx" style="width: 150px" @change="getTreeselect()"
                    placeholder="请选择申报类型" clearable>
           <el-option
             v-for="dict in dict.type.workload_khxlx"
@@ -42,17 +42,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['workload:sbgl:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="danger"
           plain
           icon="el-icon-delete"
@@ -62,54 +51,61 @@
           v-hasPermi="['workload:sbgl:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['workload:sbgl:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['workload:sbgl:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="sbglList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="申报时间" align="center" prop="createtime" width="180">
+      <el-table-column type="selection" width="55" align="center" :selectable="checkedSelectRow"/>
+      <el-table-column label="申报时间" align="center" prop="sbsj" width="100">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createtime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.sbsj, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="申报流程" align="center" prop="lcid" />
-      <el-table-column label="申报人" align="center" prop="sqr" />
-      <el-table-column label="类型" align="center" prop="sqlx">
+      <el-table-column label="申报流程" align="center" prop="lcmc" />
+      <el-table-column label="申报人" align="center" prop="sqrxm" width="100"/>
+      <el-table-column label="类型" align="center" prop="sqlxmc" width="90">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.workload_khxlx" :value="scope.row.sqlx"/>
         </template>
       </el-table-column>
-      <el-table-column label="考核项" align="center" prop="ksxid" />
-      <el-table-column label="工作时长" align="center" prop="gzsc" />
+      <el-table-column label="考核项" align="center" prop="khxmc" />
+      <el-table-column label="工作时长" align="center" prop="gzsc" width="100"/>
       <el-table-column label="工作简述" align="center" prop="gzjs" />
-      <el-table-column label="申请分值" align="center" prop="sqfz" />
-      <el-table-column label="审核状态" align="center" prop="shzt" />
+      <el-table-column label="申请分值" align="center" prop="sqfz" width="100"/>
+      <el-table-column label="审核状态" align="center" prop="shztmc" width="100" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
+          <el-button v-if="scope.row.shzt == '0'"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['workload:sbgl:edit']"
           >修改</el-button>
-          <el-button
+          <el-button v-if="scope.row.shzt == '0'"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['workload:sbgl:remove']"
           >删除</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-search"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['workload:sbgl:remove']"
+          >查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -166,7 +162,7 @@
     <el-dialog :title="title" :visible.sync="open" width="720px" append-to-body :close-on-press-escape="false" :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" :inline="true" label-width="100px" style="padding: 5px 15px;">
         <el-form-item label="类型" prop="sqlx" class="el-form-item-margin">
-          <el-select v-model="form.sqlx" placeholder="请选择考核类型" style="width: 200px">
+          <el-select v-model="form.sqlx" placeholder="请选择考核类型" style="width: 200px" @change="getCyryTreeselect()">
             <el-option
               v-for="dict in dict.type.workload_khxlx"
               :key="dict.value"
@@ -177,10 +173,11 @@
         </el-form-item>
 
         <el-form-item label="考核项" prop="ksxid" class="el-form-item-margin">
-          <el-input v-model="form.ksxid" placeholder="请选择考核项" style="width: 200px"/>
+          <treeselect style="width: 200px" v-model="form.ksxid" :options="khxglOptionsCyry"
+                     @input="checkedKhxdyfs" :normalizer="normalizerCyry" placeholder="请选择考核项" />
         </el-form-item>
         <el-form-item label="开始时间" prop="gzkssj" class="el-form-item-margin">
-          <el-date-picker
+          <el-date-picker @change="checkedGzkssj('1')"
             style="width: 200px"
             v-model="form.gzkssj"
             type="datetime"
@@ -191,7 +188,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间" prop="gzjssj" class="el-form-item-margin">
-          <el-date-picker
+          <el-date-picker @change="checkedGzkssj('2')"
             style="width: 200px"
             v-model="form.gzjssj"
             type="datetime"
@@ -202,30 +199,32 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="工作时长" prop="gzsc" class="el-form-item-margin">
-          <el-input v-model="form.gzsc" placeholder="请输入工作时长(小时)" style="width: 200px"/>
+          <el-input v-model="form.gzsc" placeholder="请输入工作时长" style="width: 160px"/>小时
         </el-form-item>
         <el-form-item label="总分值" prop="sqfz" class="el-form-item-margin">
-          <el-input v-model="form.sqfz" placeholder="请输入申请分值" style="width: 200px"/>
+          <el-input v-model="form.sqfz" placeholder="请输入申请分值" style="width: 130px"/>预设<span style="color: red;">{{form.tempSqfz}}</span>分
         </el-form-item>
-        <el-form-item label="参与人" prop="sqfz" class="el-form-item-margin">
+        <el-form-item label="参与人"  class="el-form-item-margin">
           <slot>
             <el-button type="primary" plain icon="el-icon-plus" style="padding: 6px 9px;" title="添加参与人"
                        @click="showCyrDialog" size="mini" ></el-button>
+            <el-button type="primary" plain style="padding: 6px 9px;" title="计算每人得分，不能平均分配的，请手动修改分值分配"
+                       @click="avgCyryFz" size="mini" >总分值平均分配</el-button>
           </slot>
           <table border="1" style="border-collapse: collapse;text-align: center;">
             <tr>
               <td style="width:80px">姓名</td>
-              <td>得分</td>
-              <td>工作分配</td>
-              <td></td>
+              <td style="width:110px">得分</td>
+              <td style="width:295px">工作分配</td>
+              <td style="width:50px"></td>
             </tr>
-            <template v-for="item in cyryList">
+            <template v-for="(item, index) in cyryList">
               <tr>
                 <td>{{item.yhxm}}</td>
                 <td><el-input-number size="mini" v-model="item.df" style="width: 100px;" :min="0.01"></el-input-number></td>
                 <td><el-input v-model="item.gznr" placeholder="请输入工作内容" style="width: 295px"/></td>
                 <td><el-button type="danger" plain icon="el-icon-delete" style="padding: 6px 9px;"
-                               @click="handleDelete" size="mini" ></el-button></td>
+                               @click="handleDeleteCyry(item,index)" size="mini" ></el-button></td>
               </tr>
             </template>
           </table>
@@ -236,7 +235,8 @@
 
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm('0')">保 存</el-button>
+        <el-button type="primary" @click="submitForm('1')">提 交</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -244,11 +244,14 @@
 </template>
 
 <script>
-  import { listSbgl, getSbgl, delSbgl, addSbgl, updateSbgl, queryCyryList } from "@/api/workload/sbgl";
-  import { listKhxglZs } from "@/api/workload/khxgl";
+  import { listSbgl, getSbgl, delSbgl, addSbgl, updateSbgl, queryCyryList,getUserByDlr,querySbcyryList } from "@/api/workload/sbgl";
+  import Treeselect from "@riophae/vue-treeselect";
+  import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+  import { listKhxglZs, getKhxgl } from "@/api/workload/khxgl";
   export default {
     name: "Sbgl",
     dicts: ['workload_khxlx'],
+    components: { Treeselect },
     data() {
       return {
         pickerOptions: {
@@ -286,26 +289,11 @@
         //参与人员选择table数据
         cyryTableList:[],
         // 参与人员
-        cyryList: [{
-          yhid:'2',
-          yhxm:'张三风',
-          bmmc:'A部门',
-          nl:'45',
-          xbmc:'男',
-          df:12,
-          gznr:'23sdff'
-        },
-          {
-            yhid:'3',
-            yhxm:'李四',
-            bmmc:'B部门',
-            nl:'36',
-            xbmc:'男',
-            df:2,
-            gznr:'23222'
-          }],
+        cyryList: [],
         // 考核项管理树选项
         khxglOptions: [],
+        // 考核项管理树选项 参与人员表单
+        khxglOptionsCyry: [],
         // 非多个禁用
         multiple: true,
         // 显示搜索条件
@@ -325,7 +313,8 @@
         queryCyryParams: {
           pageNum: 1,
           pageSize: 10,
-          queryCyrXm: null
+          queryCyrXm: null,
+          sqid: ''
         },
         // 查询参数
         queryParams: {
@@ -340,25 +329,98 @@
         form: {},
         // 表单校验
         rules: {
+          sqlx: [{ required: true, message: "类型不能为空", trigger: "change" }],
+          ksxid: [{ required: true, message: "考核项不能为空", trigger: "change" }],
+          gzkssj: [{ required: true, message: "开始时间不能为空", trigger: "blur" }],
+          gzjssj: [{ required: true, message: "结束时间不能为空", trigger: "blur" }],
+          gzsc: [{ required: true, message: "工作时长不能为空", trigger: "blur" }],
+          sqfz: [{ required: true, message: "总分值不能为空", trigger: "blur" }],
+          gzjs: [{ required: true, message: "工作内容不能为空", trigger: "blur" }]
         }
       };
     },
     created() {
       this.getList();
+      this.getTreeselect();
     },
     methods: {
+      //申报表单中  判断开始结束时间大小
+      checkedGzkssj(type){
+        if(this.form.gzkssj !== null && this.form.gzjssj !== null && this.form.gzkssj !== '' && this.form.gzjssj !== ''){
+          let date1 = new Date(this.form.gzkssj)
+          let date2 = new Date(this.form.gzjssj)
+          if(date1 > date2){
+            this.$modal.msgWarning("时间选择错误，结束时间应大于开始时间！")
+            this.form.gzjssj = ''
+            this.form.gzsc = ''
+            return
+          }
+          let gzscTemp = Math.ceil(parseInt(date2 - date1) / 1000 / 60 / 60)
+          this.form.gzsc = gzscTemp
+        }
+      },
+      //判断主列表的多选按钮是否禁用
+      checkedSelectRow(row,index){
+        if (row.shzt == '0') {
+          return true //不可勾选
+        } else {
+          return false; //可勾选
+        }
+      },
+      //表单中考核项改变时触发
+      checkedKhxdyfs(value,state){
+        if(value !== null && value !== '' && value !== '0' && value !== 0){
+          getKhxgl(value).then(response => {
+            let tempObj = response.data;
+            this.form.sqfz = tempObj.ysfz
+            this.form.tempSqfz = tempObj.ysfz
+          });
+        }
+      },
+      //表单中考核项改变时触发 修改是使用
+      checkedKhxdyfsByUpd(value){
+        getKhxgl(value).then(response => {
+          let tempObj = response.data;
+          this.form.sqfz = tempObj.ysfz
+          this.form.tempSqfz = tempObj.ysfz
+        });
+      },
       //选择参与人员后确定
       saveCyry(){
-        this.cyryList = []
         this.cyryTempList.forEach((row) => {
           let tempRow = JSON.parse(JSON.stringify(row))
           tempRow.yhdm = tempRow.yhid
           tempRow.xm = tempRow.ryxm
           tempRow.df = 0.01
-          this.cyryList.push(tempRow)
+          let tempList = this.cyryList.filter(t => t.yhid === row.yhid)
+          if(tempList.length < 1){
+            this.cyryList.push(tempRow)
+          }
         })
+        if(this.form.sqfz !== null && this.form.sqfz !== '' && this.cyryList.length > 0){
+          let tempList = this.average(parseFloat(this.form.sqfz),this.cyryList.length,2)
+          for(let i=0; i<tempList.length;i++){
+            this.cyryList[i].df = tempList[i]
+          }
+        }
+        this.showCyrDialogSf = false
       },
-      //计算平均分
+      //平均分配按钮
+      avgCyryFz(){
+        if(this.cyryList.length < 1){
+          this.$modal.msgWarning("请先选择参与人！")
+          return
+        }
+        if(this.form.sqfz !== null && this.form.sqfz !== ''){
+          let tempList = this.average(parseFloat(this.form.sqfz),this.cyryList.length,2)
+          for(let i=0; i<tempList.length;i++){
+            this.cyryList[i].df = tempList[i]
+          }
+        }else{
+          this.$modal.msgWarning("总分值不为空时执行！")
+        }
+      },
+      //计算平均分 value 总分   amount 总数  point 小数点位数
       average(value,amount,point){
         if(!point){
           point = 2
@@ -451,9 +513,6 @@
         }
       },
 
-
-
-
       //查询参与人员table list
       queryCyryTableList(){
         this.showCyrDialogSf = true
@@ -486,10 +545,29 @@
       getList() {
         this.loading = true;
         listSbgl(this.queryParams).then(response => {
+          console.log(JSON.stringify(response.rows))
           this.sbglList = response.rows;
+
           this.total = response.total;
           this.loading = false;
         });
+      },
+      /** 查询参与人员表单考核项管理下拉树结构 */
+      getCyryTreeselect() {
+        let val = this.form.sqlx
+        if(val !== null && val !== ''){
+          let data = {
+            sjflx: val
+          }
+          listKhxglZs(data).then(response => {
+            this.khxglOptionsCyry = [];
+            const data = { id: '0', khxmc: '顶级节点', children: [] };
+            data.children = this.handleTree(response.data, "id", "pid");
+            this.khxglOptionsCyry.push(data);
+          });
+        }else{
+          this.khxglOptionsCyry = [];
+        }
       },
       /** 查询考核项管理下拉树结构 */
       getTreeselect() {
@@ -502,6 +580,17 @@
           data.children = this.handleTree(response.data, "id", "pid");
           this.khxglOptions.push(data);
         });
+      },
+      /** 转换菜单数据结构  参与人员表单*/
+      normalizerCyry(node) {
+        if (node.children && !node.children.length) {
+          delete node.children;
+        }
+        return {
+          id: node.id + '',
+          label: node.khxmc,
+          children: node.children
+        };
       },
       /** 转换菜单数据结构 */
       normalizer(node) {
@@ -532,10 +621,12 @@
           lcid: null,
           sqr: null,
           sqlx: null,
-          ksxid: null,
+          ksxid: '',
           gzkssj: null,
           gzjssj: null,
           gzsc: null,
+          tempSqfz: '',
+          cyryTList:[],
           gzjs: null,
           sqfz: null,
           shzt: null
@@ -562,42 +653,124 @@
       handleAdd() {
         this.reset();
         this.open = true;
-        this.title = "添加申报管理";
+        this.cyryList = []
+        getUserByDlr().then((res) => {
+          let tempObj = res.data
+          if(this.form.sqfz !== null && this.form.sqfz !== ''){
+            tempObj.df = this.this.form.sqfz
+          }else{
+            tempObj.df = 0.01
+          }
+          this.cyryList.push(tempObj)
+        })
+        this.title = "添加申报";
       },
       /** 修改按钮操作 */
-      handleUpdate(row) {
+      async handleUpdate(row) {
         this.reset();
-        const id = row.id || this.ids
-        getSbgl(id).then(response => {
+        const id = row.id
+        this.queryCyryParams.sqid = id
+        await getSbgl(id).then(response => {
           this.form = response.data;
+          this.getCyryTreeselect();
+          this.checkedKhxdyfsByUpd(this.form.ksxid);
+          querySbcyryList({id:id}).then(res => {
+            res.data.forEach(t => {
+              let tempRow = JSON.parse(JSON.stringify(t))
+              tempRow.df = parseFloat(t.df)
+              this.cyryList.push(tempRow)
+            })
+            this.cyryList = res.data
+          });
           this.open = true;
-          this.title = "修改申报管理";
+          this.title = "修改申报";
         });
       },
       /** 提交按钮 */
-      submitForm() {
+      async submitForm(sftj) {
+        let self = this
         this.$refs["form"].validate(valid => {
           if (valid) {
-            if (this.form.id != null) {
-              updateSbgl(this.form).then(response => {
-                this.$modal.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
+            let tempSumFs = 0.00 //实际分配总分数
+            let tempYsfz = 0.00 //考核项预设分值
+            let tempZfz = 0.00 // 输入的总分值
+            // debugger
+            if(this.form.ksxid !== null && this.form.ksxid !== '' && this.form.ksxid !== '0'){// 判断分数
+              getKhxgl(this.form.ksxid).then(response => {
+                let tempObj = response.data;
+                tempYsfz = parseFloat(tempObj.ysfz)
+                tempZfz = parseFloat(this.form.sqfz)
+                 if(tempZfz > tempYsfz){
+                   this.$modal.msgWarning('总分值不能大于考核项预设分值!');
+                   throw new Error("执行停止")
+                   return
+                 }else{
+                   if(this.cyryList.length < 1){//判断参与人
+                     this.$modal.msgWarning('参与人不能为空，请先选择参与人!');
+                     throw new Error("执行停止")
+                     return
+                   }else{
+                     let tempSumFs = 0.00
+                     this.cyryList.forEach(t => {
+                       tempSumFs += parseFloat(t.df)
+                     })
+                     if(tempSumFs !== parseFloat(this.form.sqfz)){
+                       this.$modal.msgWarning('分配分数:' + tempSumFs + '和总分值:' + parseFloat(this.form.sqfz) + '不相同，请修改!');
+                       throw new Error("执行停止")
+                       return
+                     }else{
+                       if(tempZfz < tempYsfz){
+                         this.$modal.confirm('当前申报的分配总分（' + tempZfz + '）小于预设分值（' + tempYsfz + '），是否继续操作？').then(function() {
+                           self.updDataSer(sftj)
+                         }).catch(() => {});
+                       }else{
+                         self.updDataSer(sftj)
+                       }
+                     }
+                   }
+                 }
               });
-            } else {
-              addSbgl(this.form).then(response => {
-                this.$modal.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              });
+            }else{
+              this.$modal.msgWarning('请选择正确的考核项!');
+              throw new Error("执行停止")
+              return
             }
           }
         });
       },
+      //调用保存修改接口
+      updDataSer(sftj){
+        let msgStr = '操作成功'
+        if(sftj === '0'){
+          msgStr = '保存成功'
+        }else{
+          msgStr = '提交成功'
+        }
+        this.form.cyryTList = this.cyryList;
+        this.form.shzt = sftj
+        if (this.form.id != null) {
+          updateSbgl(this.form).then(response => {
+            this.$modal.msgSuccess(msgStr);
+            this.open = false;
+            this.getList();
+          });
+        } else {
+          updateSbgl(this.form).then(response => {
+            this.$modal.msgSuccess(msgStr);
+            this.open = false;
+            this.getList();
+          });
+        }
+      },
+
+      /** 删除参与人员按钮操作 */
+      handleDeleteCyry(row,index) {
+        this.cyryList.splice(index, 1);
+      },
       /** 删除按钮操作 */
       handleDelete(row) {
         const ids = row.id || this.ids;
-        this.$modal.confirm('是否确认删除申报管理编号为"' + ids + '"的数据项？').then(function() {
+        this.$modal.confirm('是否确认删除当前数据项？').then(function() {
           return delSbgl(ids);
         }).then(() => {
           this.getList();
@@ -615,7 +788,7 @@
 </script>
 <style>
   .el-form-item-margin{
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     margin-right: 5px;
   }
   .el-dialog__header {

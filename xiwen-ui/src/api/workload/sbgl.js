@@ -24,6 +24,14 @@ export function getSbgl(id) {
     method: 'get'
   })
 }
+// 查询申报管理详细
+export function querySbcyryList(query) {
+  return request({
+    url: '/workload/sbgl/querySbcyryList',
+    method: 'get',
+    params: query
+  })
+}
 
 // 新增申报管理
 export function addSbgl(data) {
@@ -34,7 +42,16 @@ export function addSbgl(data) {
   })
 }
 
-// 修改申报管理
+// 获取个人信息
+export function getUserByDlr() {
+  return request({
+    url: '/workload/sbgl/getUserByDlr',
+    method: 'get'
+  })
+}
+
+
+// 添加 修改申报管理
 export function updateSbgl(data) {
   return request({
     url: '/workload/sbgl',

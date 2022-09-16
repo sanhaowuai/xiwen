@@ -29,6 +29,8 @@ public interface SbglMapper
      */
     public List<Sbgl> selectSbglList(Sbgl sbgl);
     public List<SbCyry> queryCyryList(SbCyry sbCyry);
+    public List<SbCyry> querySbcyryList(Sbgl sbgl);
+    public SbCyry getUserByDlr(SbCyry sbCyry);
 
     /**
      * 新增申报管理
@@ -37,6 +39,7 @@ public interface SbglMapper
      * @return 结果
      */
     public int insertSbgl(Sbgl sbgl);
+    public int insertSbCyry(SbCyry sbCyry);
 
     /**
      * 修改申报管理
@@ -45,6 +48,7 @@ public interface SbglMapper
      * @return 结果
      */
     public int updateSbgl(Sbgl sbgl);
+    public void deleteSbcyry(Sbgl sbgl);
 
     /**
      * 删除申报管理

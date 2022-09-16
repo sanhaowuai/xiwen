@@ -204,9 +204,9 @@
         rules: {
           khxmc: [{ required: true, message: "考核项不能为空", trigger: "blur" }],
           ysfz: [{ required: true, message: "预设分值不能为空", trigger: "blur" }],
-          sjflx: [{ required: true, message: "类型不能为空", trigger: "blur" }],
+          sjflx: [{ required: true, message: "类型不能为空", trigger: "change" }],
           fzlx: [{ required: true, message: "分值不能为空", trigger: "blur" }],
-          lcid: [{ required: true, message: "申报流程不能为空", trigger: "blur" }]
+          lcid: [{ required: true, message: "申报流程不能为空", trigger: "change" }]
         }
       };
     },
