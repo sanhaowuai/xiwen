@@ -79,6 +79,12 @@ public class NdglController extends BaseController
         return AjaxResult.success(ndbService.selectNdbById(id));
     }
 
+    @GetMapping(value = "/getWfConfig/{key}")
+    public AjaxResult getWfConfig(@PathVariable("key") String key)
+    {
+        return AjaxResult.success(ndbService.getWfConfig(key));
+    }
+
     /**
      * 新增年度管理
      */

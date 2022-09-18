@@ -28,9 +28,19 @@ public class Ndb extends BaseEntity
     @Excel(name = "年度")
     private String nd;
 
-    /** 是否当前年度（1是0否） */
-    @Excel(name = "是否当前年度", readConverterExp = "1=是0否")
+
     private String sfdqnd;
+    /** 是否当前年度（1是0否） */
+    @Excel(name = "是否当前年度")
+    private String sfdqndmc;
+
+    public String getSfdqndmc() {
+        return sfdqndmc;
+    }
+
+    public void setSfdqndmc(String sfdqndmc) {
+        this.sfdqndmc = sfdqndmc;
+    }
 
     public void setId(String id)
     {

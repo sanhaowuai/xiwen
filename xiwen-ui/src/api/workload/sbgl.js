@@ -24,6 +24,13 @@ export function getSbgl(id) {
     method: 'get'
   })
 }
+// 查询系统参数表是否可申报
+export function getWfConfig(key) {
+  return request({
+    url: '/workload/ndgl/getWfConfig/' + key,
+    method: 'get'
+  })
+}
 // 查询申报管理详细
 export function querySbcyryList(query) {
   return request({

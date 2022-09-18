@@ -66,21 +66,21 @@
 
     <el-table v-loading="loading" :data="sbglList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="checkedSelectRow"/>
-      <el-table-column label="申报时间" align="center" prop="sbsj" width="100">
+      <el-table-column label="申报时间" align="center" prop="sbsj" width="97">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.sbsj, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="申报流程" align="center" prop="lcmc" />
+      <el-table-column label="申报流程" align="center" prop="lcmc" width="100" :show-overflow-tooltip="true" />
       <el-table-column label="申报人" align="center" prop="sqrxm" width="100"/>
-      <el-table-column label="类型" align="center" prop="sqlxmc" width="90">
+      <el-table-column label="类型" align="center" prop="sqlxmc" width="80">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.workload_khxlx" :value="scope.row.sqlx"/>
         </template>
       </el-table-column>
-      <el-table-column label="考核项" align="center" prop="khxmc" />
+      <el-table-column label="考核项" align="center" prop="khxmc" width="120" :show-overflow-tooltip="true" />
       <el-table-column label="工作时长" align="center" prop="gzsc" width="100"/>
-      <el-table-column label="工作简述" align="center" prop="gzjs" />
+      <el-table-column label="工作简述" align="center" prop="gzjs" width="200" :show-overflow-tooltip="true" />
       <el-table-column label="申请分值" align="center" prop="sqfz" width="100"/>
       <el-table-column label="审核状态" align="center" prop="shztmc" width="100" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -173,7 +173,7 @@
         </el-form-item>
 
         <el-form-item label="考核项" prop="ksxid" class="el-form-item-margin">
-          <treeselect style="width: 200px" v-model="form.ksxid" :options="khxglOptionsCyry"
+          <treeselect style="width: 200px" v-model="form.ksxid" :options="khxglOptionsCyry" :clearable="false"
                      @input="checkedKhxdyfs" :normalizer="normalizerCyry" placeholder="请选择考核项" />
         </el-form-item>
         <el-form-item label="开始时间" prop="gzkssj" class="el-form-item-margin">
@@ -244,7 +244,8 @@
 </template>
 
 <script>
-  import { listSbgl, getSbgl, delSbgl, addSbgl, updateSbgl, queryCyryList,getUserByDlr,querySbcyryList } from "@/api/workload/sbgl";
+  import { listSbgl, getSbgl, delSbgl, addSbgl, updateSbgl,
+    queryCyryList,getUserByDlr,querySbcyryList,getWfConfig } from "@/api/workload/sbgl";
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import { listKhxglZs, getKhxgl } from "@/api/workload/khxgl";
@@ -307,6 +308,9 @@
         sbglList: [],
         // 弹出层标题
         title: "",
+        // 限制天数
+        sbxzts: '1',
+        sbxztsDqsj: null,
         // 是否显示弹出层
         open: false,
         // 查询参数
@@ -342,8 +346,18 @@
     created() {
       this.getList();
       this.getTreeselect();
+      this.getCyryTreeselect();
+      this.getWfConfig();
     },
     methods: {
+      getWfConfig(){
+        getWfConfig('WF_SB_TSXZ').then(res => {
+          this.sbxzts = parseInt(res.data.sfky)
+          if('0' === this.sbxzts || 0 === this.sbxzts){
+            this.sbxztsDqsj = new Date(res.data.dqsj)
+          }
+        })
+      },
       //申报表单中  判断开始结束时间大小
       checkedGzkssj(type){
         if(this.form.gzkssj !== null && this.form.gzjssj !== null && this.form.gzkssj !== '' && this.form.gzjssj !== ''){
@@ -545,9 +559,7 @@
       getList() {
         this.loading = true;
         listSbgl(this.queryParams).then(response => {
-          console.log(JSON.stringify(response.rows))
           this.sbglList = response.rows;
-
           this.total = response.total;
           this.loading = false;
         });
@@ -555,18 +567,21 @@
       /** 查询参与人员表单考核项管理下拉树结构 */
       getCyryTreeselect() {
         let val = this.form.sqlx
-        if(val !== null && val !== ''){
+        if(val !== null && val !== '' && val !== undefined && val !== 'undefined'){
           let data = {
             sjflx: val
           }
           listKhxglZs(data).then(response => {
             this.khxglOptionsCyry = [];
-            const data = { id: '0', khxmc: '顶级节点', children: [] };
+            const data = { id: 0, khxmc: '顶级节点', children: [] };
             data.children = this.handleTree(response.data, "id", "pid");
             this.khxglOptionsCyry.push(data);
           });
         }else{
           this.khxglOptionsCyry = [];
+          const data = { id: 0, khxmc: '顶级节点', children: [] };
+          this.khxglOptionsCyry.push(data);
+          this.form.ksxid = 0
         }
       },
       /** 查询考核项管理下拉树结构 */
@@ -621,7 +636,7 @@
           lcid: null,
           sqr: null,
           sqlx: null,
-          ksxid: '',
+          ksxid: 0,
           gzkssj: null,
           gzjssj: null,
           gzsc: null,
@@ -691,23 +706,32 @@
         let self = this
         this.$refs["form"].validate(valid => {
           if (valid) {
+            //判断是否可申报 this.sbxzts  form.gzkssj
+            if('0' === this.sbxzts || 0 === this.sbxzts){
+              let date1 = new Date(this.form.gzkssj)
+              let date2 = this.sbxztsDqsj
+              if(date1 < date2){
+                this.$modal.msgWarning("当前工作已过系统设置天数，不可申报上月的工作量！")
+                throw SyntaxError();
+              }
+            }
             let tempSumFs = 0.00 //实际分配总分数
             let tempYsfz = 0.00 //考核项预设分值
             let tempZfz = 0.00 // 输入的总分值
             // debugger
-            if(this.form.ksxid !== null && this.form.ksxid !== '' && this.form.ksxid !== '0'){// 判断分数
+            if(this.form.ksxid !== null && this.form.ksxid !== '' && this.form.ksxid !== '0' && this.form.ksxid !== 0){// 判断分数
               getKhxgl(this.form.ksxid).then(response => {
                 let tempObj = response.data;
                 tempYsfz = parseFloat(tempObj.ysfz)
                 tempZfz = parseFloat(this.form.sqfz)
                  if(tempZfz > tempYsfz){
                    this.$modal.msgWarning('总分值不能大于考核项预设分值!');
-                   throw new Error("执行停止")
+                   throw SyntaxError();
                    return
                  }else{
                    if(this.cyryList.length < 1){//判断参与人
                      this.$modal.msgWarning('参与人不能为空，请先选择参与人!');
-                     throw new Error("执行停止")
+                     throw SyntaxError();
                      return
                    }else{
                      let tempSumFs = 0.00
@@ -716,7 +740,7 @@
                      })
                      if(tempSumFs !== parseFloat(this.form.sqfz)){
                        this.$modal.msgWarning('分配分数:' + tempSumFs + '和总分值:' + parseFloat(this.form.sqfz) + '不相同，请修改!');
-                       throw new Error("执行停止")
+                       throw SyntaxError();
                        return
                      }else{
                        if(tempZfz < tempYsfz){
@@ -732,7 +756,7 @@
               });
             }else{
               this.$modal.msgWarning('请选择正确的考核项!');
-              throw new Error("执行停止")
+              throw SyntaxError();
               return
             }
           }

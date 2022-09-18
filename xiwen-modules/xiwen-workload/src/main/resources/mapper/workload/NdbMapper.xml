@@ -4,70 +4,66 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xiwen.workload.mapper.NdbMapper">
 
-    <resultMap type="com.xiwen.workload.domain.Ndb" id="NdbResult">
-        <result property="id"    column="id"    />
-        <result property="verss"    column="verss"    />
-        <result property="isdel"    column="isdel"    />
-        <result property="nd"    column="nd"    />
-        <result property="sfdqnd"    column="sfdqnd"    />
-    </resultMap>
 
     <sql id="selectNdbVo">
         select id, verss, isdel, nd, sfdqnd from wf_ndb
     </sql>
 
-    <select id="selectNdbList" parameterType="com.xiwen.workload.domain.Ndb" resultMap="NdbResult">
-        <include refid="selectNdbVo"/>
-        <where>
-            <if test="nd != null  and nd != ''"> and nd = #{nd}</if>
-        </where>
+    <select id="selectNdbList" parameterType="com.xiwen.workload.domain.Ndb" resultType="com.xiwen.workload.domain.Ndb">
+        select id, verss, isdel, nd, sfdqnd,
+            case sfdqnd when '1' then '是' else '否' end sfdqndmc
+        from wf_ndb
+        where isdel=0
+        <if test="nd != null  and nd != ''"> and nd = #{nd}</if>
     </select>
-    <select id="getNdList" parameterType="com.xiwen.workload.domain.Ndb" resultMap="NdbResult">
+    <select id="getNdList" parameterType="com.xiwen.workload.domain.Ndb" resultType="com.xiwen.workload.domain.Ndb">
         select id, verss, isdel, nd, sfdqnd from wf_ndb where isdel=0 order by nd
     </select>
 
-    <select id="selectNdbById" parameterType="String" resultMap="NdbResult">
+    <select id="getWfConfig" parameterType="String" resultType="com.xiwen.workload.domain.WfConfig">
+        select * from wf_config where `key`=#{id}
+    </select>
+    <select id="selectNdbById" parameterType="String" resultType="com.xiwen.workload.domain.Ndb">
         <include refid="selectNdbVo"/>
         where id = #{id}
     </select>
 
+    <select id="getNdCountByNdNotId" parameterType="com.xiwen.workload.domain.Ndb" resultType="int">
+        select count(1) from wf_ndb where nd=#{nd} and id!=#{id}
+    </select>
+    <select id="getNdCountByNd" parameterType="com.xiwen.workload.domain.Ndb" resultType="int">
+        select count(1) from wf_ndb where nd=#{nd}
+    </select>
+    <update id="updateNdbByNd" parameterType="com.xiwen.workload.domain.Ndb">
+        update wf_ndb set isdel=0,sfdqnd=#{sfdqnd} where nd=#{nd}
+    </update>
+
     <insert id="insertNdb" parameterType="com.xiwen.workload.domain.Ndb">
-        insert into wf_ndb
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
-            <if test="verss != null">verss,</if>
-            <if test="isdel != null">isdel,</if>
-            <if test="nd != null">nd,</if>
-            <if test="sfdqnd != null">sfdqnd,</if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
-            <if test="verss != null">#{verss},</if>
-            <if test="isdel != null">#{isdel},</if>
-            <if test="nd != null">#{nd},</if>
-            <if test="sfdqnd != null">#{sfdqnd},</if>
-        </trim>
+        insert into wf_ndb(id,verss,isdel,nd,sfdqnd)
+        values(#{id},1,0,#{nd},#{sfdqnd})
     </insert>
 
+    <update id="updateNdbSfdqndNotNd" parameterType="com.xiwen.workload.domain.Ndb">
+        update wf_ndb set sfdqnd = '0'
+        where nd != #{nd}
+    </update>
+    <update id="updateNdbSfdqnd" parameterType="com.xiwen.workload.domain.Ndb">
+        update wf_ndb set sfdqnd = '0'
+        where id != #{id}
+    </update>
     <update id="updateNdb" parameterType="com.xiwen.workload.domain.Ndb">
-        update wf_ndb
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="verss != null">verss = #{verss},</if>
-            <if test="isdel != null">isdel = #{isdel},</if>
-            <if test="nd != null">nd = #{nd},</if>
-            <if test="sfdqnd != null">sfdqnd = #{sfdqnd},</if>
-        </trim>
+        update wf_ndb set nd = #{nd},sfdqnd = #{sfdqnd}
         where id = #{id}
     </update>
 
-    <delete id="deleteNdbById" parameterType="String">
-        delete from wf_ndb where id = #{id}
-    </delete>
+    <update id="deleteNdbById" parameterType="String">
+        update wf_ndb set isdel=1 where id = #{id}
+    </update>
 
-    <delete id="deleteNdbByIds" parameterType="String">
-        delete from wf_ndb where id in
+    <update id="deleteNdbByIds" parameterType="String">
+        update wf_ndb set isdel=1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 </mapper>

@@ -2,6 +2,7 @@ package com.xiwen.workload.mapper;
 
 import java.util.List;
 import com.xiwen.workload.domain.Ndb;
+import com.xiwen.workload.domain.WfConfig;
 
 /**
  * 年度管理Mapper接口
@@ -19,6 +20,8 @@ public interface NdbMapper
      */
     public Ndb selectNdbById(String id);
 
+    public WfConfig getWfConfig(String key);
+
     /**
      * 查询年度管理列表
      *
@@ -35,6 +38,9 @@ public interface NdbMapper
      * @return 结果
      */
     public int insertNdb(Ndb ndb);
+    public void updateNdbByNd(Ndb ndb);
+    public int getNdCountByNd(Ndb ndb);
+    public int getNdCountByNdNotId(Ndb ndb);
 
     /**
      * 修改年度管理
@@ -43,6 +49,8 @@ public interface NdbMapper
      * @return 结果
      */
     public int updateNdb(Ndb ndb);
+    public int updateNdbSfdqnd(Ndb ndb);
+    public int updateNdbSfdqndNotNd(Ndb ndb);
 
     /**
      * 删除年度管理

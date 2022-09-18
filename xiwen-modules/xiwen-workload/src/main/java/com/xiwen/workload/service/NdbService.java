@@ -2,6 +2,7 @@ package com.xiwen.workload.service;
 
 import java.util.List;
 import com.xiwen.workload.domain.Ndb;
+import com.xiwen.workload.domain.WfConfig;
 
 /**
  * 年度管理Service接口
@@ -18,6 +19,14 @@ public interface NdbService
      * @return 年度管理
      */
     public Ndb selectNdbById(String id);
+    /**
+     * @description:查询系统参数表
+     * @author: cuiqichao 
+     * @date: 2022-09-18 22:40:38
+     * @param: key 参数类型
+     * @return: com.xiwen.workload.domain.Ndb
+    **/
+    public WfConfig getWfConfig(String key);
 
     /**
      * 查询年度管理列表

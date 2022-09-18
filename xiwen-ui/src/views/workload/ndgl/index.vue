@@ -48,27 +48,23 @@
           v-hasPermi="['workload:ndgl:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['workload:ndgl:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['workload:ndgl:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="ndglList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="年度" align="center" prop="nd" />
-      <el-table-column label="是否当前年度" align="center" prop="sfdqnd">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.sfdqnd"/>
-        </template>
+      <el-table-column label="是否当前年度" align="center" prop="sfdqndmc">
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -100,29 +96,15 @@
 
     <!-- 添加或修改年度管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="乐观锁" prop="verss">
-          <el-input v-model="form.verss" placeholder="请输入乐观锁" />
-        </el-form-item>
-        <el-form-item label="是否删除">
-          <el-radio-group v-model="form.isdel">
-            <el-radio
-              v-for="dict in dict.type.sys_yes_no"
-              :key="dict.value"
-              :label="dict.value"
-            >{{dict.label}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-divider content-position="center"><span style="color: red;">年度格式:四位数字，例:2022</span></el-divider>
         <el-form-item label="年度" prop="nd">
-          <el-input v-model="form.nd" placeholder="请输入年度" />
+          <el-input type="number" v-model="form.nd" placeholder="请输入年度" />
         </el-form-item>
         <el-form-item label="是否当前年度">
           <el-radio-group v-model="form.sfdqnd">
-            <el-radio
-              v-for="dict in dict.type.sys_yes_no"
-              :key="dict.value"
-              :label="dict.value"
-            >{{dict.label}}</el-radio>
+            <el-radio key="1" label="1">是</el-radio>
+            <el-radio key="0" label="0">否</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -197,7 +179,7 @@
           id: null,
           verss: null,
           isdel: "0",
-          nd: null,
+          nd: '2022',
           sfdqnd: "0"
         };
         this.resetForm("form");
@@ -257,7 +239,7 @@
       /** 删除按钮操作 */
       handleDelete(row) {
         const ids = row.id || this.ids;
-        this.$modal.confirm('是否确认删除年度管理编号为"' + ids + '"的数据项？').then(function() {
+        this.$modal.confirm('是否确认当前的数据项？').then(function() {
           return delNdgl(ids);
         }).then(() => {
           this.getList();
