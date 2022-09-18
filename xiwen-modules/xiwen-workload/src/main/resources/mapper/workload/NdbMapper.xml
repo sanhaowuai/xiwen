@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiwen.workload.mapper.NdbMapper">
+
+    <resultMap type="com.xiwen.workload.domain.Ndb" id="NdbResult">
+        <result property="id"    column="id"    />
+        <result property="verss"    column="verss"    />
+        <result property="isdel"    column="isdel"    />
+        <result property="nd"    column="nd"    />
+        <result property="sfdqnd"    column="sfdqnd"    />
+    </resultMap>
+
+    <sql id="selectNdbVo">
+        select id, verss, isdel, nd, sfdqnd from wf_ndb
+    </sql>
+
+    <select id="selectNdbList" parameterType="com.xiwen.workload.domain.Ndb" resultMap="NdbResult">
+        <include refid="selectNdbVo"/>
+        <where>
+            <if test="nd != null  and nd != ''"> and nd = #{nd}</if>
+        </where>
+    </select>
+    <select id="getNdList" parameterType="com.xiwen.workload.domain.Ndb" resultMap="NdbResult">
+        select id, verss, isdel, nd, sfdqnd from wf_ndb where isdel=0 order by nd
+    </select>
+
+    <select id="selectNdbById" parameterType="String" resultMap="NdbResult">
+        <include refid="selectNdbVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertNdb" parameterType="com.xiwen.workload.domain.Ndb">
+        insert into wf_ndb
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="verss != null">verss,</if>
+            <if test="isdel != null">isdel,</if>
+            <if test="nd != null">nd,</if>
+            <if test="sfdqnd != null">sfdqnd,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="verss != null">#{verss},</if>
+            <if test="isdel != null">#{isdel},</if>
+            <if test="nd != null">#{nd},</if>
+            <if test="sfdqnd != null">#{sfdqnd},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNdb" parameterType="com.xiwen.workload.domain.Ndb">
+        update wf_ndb
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="verss != null">verss = #{verss},</if>
+            <if test="isdel != null">isdel = #{isdel},</if>
+            <if test="nd != null">nd = #{nd},</if>
+            <if test="sfdqnd != null">sfdqnd = #{sfdqnd},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNdbById" parameterType="String">
+        delete from wf_ndb where id = #{id}
+    </delete>
+
+    <delete id="deleteNdbByIds" parameterType="String">
+        delete from wf_ndb where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

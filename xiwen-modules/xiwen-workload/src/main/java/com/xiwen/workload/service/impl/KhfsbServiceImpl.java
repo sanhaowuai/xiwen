@@ -1,6 +1,9 @@
 package com.xiwen.workload.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import com.xiwen.common.core.utils.uuid.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -36,6 +39,11 @@ public class KhfsbServiceImpl implements KhfsbService
     {
         return khfsbMapper.selectKhfsbById(id);
     }
+    @Override
+    public List<Khfsxqb> getKhfsbXq(String id)
+    {
+        return khfsbMapper.getKhfsbXq(id);
+    }
 
     /**
      * 查询人员考核分数列表
@@ -62,6 +70,45 @@ public class KhfsbServiceImpl implements KhfsbService
         int rows = khfsbMapper.insertKhfsb(khfsb);
         insertKhfsxqb(khfsb);
         return rows;
+    }
+    @Transactional
+    @Override
+    public Khfsxqb updateKhfsbXq(Khfsxqb khfsxqb)
+    {
+        if(org.apache.commons.lang3.StringUtils.isBlank(khfsxqb.getRykhfsbid())){//如果主表为空 插入
+            Khfsb khfsba = new Khfsb();
+            String tempId = IdUtils.getSnowflakeId();
+            khfsba.setId(tempId);
+            khfsxqb.setRykhfsbid(tempId);
+            khfsba.setUpdateuse(khfsxqb.getUpdateuse());
+            khfsba.setCreateuse(khfsxqb.getCreateuse());
+            khfsba.setYhid(khfsxqb.getYhid());
+            khfsba.setNd(khfsxqb.getNd());
+            if("1".equals(khfsxqb.getFslx())){
+                khfsba.setZfs(khfsxqb.getFs());
+            }else{
+                khfsba.setZfs(khfsxqb.getFs().negate());
+            }
+            khfsbMapper.insertKhfsbTe(khfsba);
+        }else{
+            Khfsb khfsb =  khfsbMapper.selectKhfsbByRykhId(khfsxqb.getRykhfsbid());
+            khfsb.setUpdateuse(khfsxqb.getUpdateuse());
+            BigDecimal yfs = khfsb.getZfs();
+            BigDecimal xfs = khfsxqb.getFs();
+            if("1".equals(khfsxqb.getFslx())){
+                khfsb.setZfs(yfs.add(xfs));
+            }else if("2".equals(khfsxqb.getFslx())){
+                khfsb.setZfs(yfs.subtract(xfs));
+            }
+            khfsbMapper.updateKhfsbByXq(khfsb);
+        }
+        if(org.apache.commons.lang3.StringUtils.isNotBlank(khfsxqb.getId())){ //不为空  修改
+            khfsbMapper.updateKhfsbXq(khfsxqb);
+        }else{ //添加\
+            khfsxqb.setId(IdUtils.getSnowflakeId());
+            khfsbMapper.insertKhfsbXq(khfsxqb);
+        }
+        return khfsxqb;
     }
 
     /**

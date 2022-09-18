@@ -18,6 +18,17 @@ public class Khfsxqb extends BaseEntity
 
     /** 主键 */
     private String id;
+    private String xqb;
+    private String createtime;
+    private String updatetime;
+    private String fslxmc;
+    private String createUserName;
+    private String updateUserName;
+    private String yhid;
+    private String nd;
+    private String updatetimeg;
+    private String createtimeg;
+    private BigDecimal zfs;
 
     /** 乐观锁 */
     @Excel(name = "乐观锁")
@@ -54,6 +65,94 @@ public class Khfsxqb extends BaseEntity
     /** 备注 */
     @Excel(name = "备注")
     private String bz;
+
+    public String getUpdatetimeg() {
+        return updatetimeg;
+    }
+
+    public void setUpdatetimeg(String updatetimeg) {
+        this.updatetimeg = updatetimeg;
+    }
+
+    public String getCreatetimeg() {
+        return createtimeg;
+    }
+
+    public void setCreatetimeg(String createtimeg) {
+        this.createtimeg = createtimeg;
+    }
+
+    public String getYhid() {
+        return yhid;
+    }
+
+    public void setYhid(String yhid) {
+        this.yhid = yhid;
+    }
+
+    public String getNd() {
+        return nd;
+    }
+
+    public void setNd(String nd) {
+        this.nd = nd;
+    }
+
+    public BigDecimal getZfs() {
+        return zfs;
+    }
+
+    public void setZfs(BigDecimal zfs) {
+        this.zfs = zfs;
+    }
+
+    public String getXqb() {
+        return xqb;
+    }
+
+    public void setXqb(String xqb) {
+        this.xqb = xqb;
+    }
+
+    public String getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
+    }
+
+    public String getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(String updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    public String getFslxmc() {
+        return fslxmc;
+    }
+
+    public void setFslxmc(String fslxmc) {
+        this.fslxmc = fslxmc;
+    }
+
+    public String getCreateUserName() {
+        return createUserName;
+    }
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
+    }
+
+    public String getUpdateUserName() {
+        return updateUserName;
+    }
+
+    public void setUpdateUserName(String updateUserName) {
+        this.updateUserName = updateUserName;
+    }
 
     public void setId(String id)
     {

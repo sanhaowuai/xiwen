@@ -1,6 +1,11 @@
 package com.xiwen.workload.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import com.xiwen.common.security.utils.SecurityUtils;
+import com.xiwen.workload.domain.Khfsb;
+import com.xiwen.workload.mapper.KhfsbMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xiwen.workload.mapper.KhfsxqbMapper;
@@ -20,6 +25,9 @@ public class KhfsxqbServiceImpl implements KhfsxqbService
 {
     @Resource
     private KhfsxqbMapper khfsxqbMapper;
+
+    @Resource
+    private KhfsbMapper khfsbMapper;
 
     /**
      * 查询人员考核分数详情
@@ -78,7 +86,21 @@ public class KhfsxqbServiceImpl implements KhfsxqbService
     @Override
     public int deleteKhfsxqbByIds(String[] ids)
     {
-        return khfsxqbMapper.deleteKhfsxqbByIds(ids);
+        khfsxqbMapper.deleteKhfsxqbByIds(ids);
+        for(String s:ids){
+            Khfsxqb khfsxqb =  khfsxqbMapper.selectKhfsxqbById(s);
+            Khfsb khfsb = khfsbMapper.selectKhfsbByRykhId(khfsxqb.getRykhfsbid());
+            khfsb.setUpdateuse(SecurityUtils.getUserId()+"");
+            BigDecimal yfs = khfsb.getZfs();
+            BigDecimal xfs = khfsxqb.getFs();
+            if("2".equals(khfsxqb.getFslx())){
+                khfsb.setZfs(yfs.add(xfs));
+            }else if("1".equals(khfsxqb.getFslx())){
+                khfsb.setZfs(yfs.subtract(xfs));
+            }
+            khfsbMapper.updateKhfsbByXq(khfsb);
+        }
+        return 1;
     }
 
     /**

@@ -4,6 +4,9 @@ import java.util.List;
 import java.io.IOException;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+
+import com.xiwen.common.security.utils.SecurityUtils;
+import com.xiwen.workload.domain.Khfsxqb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,6 +74,13 @@ public class KhfsbController extends BaseController
         return AjaxResult.success(khfsbService.selectKhfsbById(id));
     }
 
+    @RequiresPermissions("workload:khfsb:query")
+    @GetMapping(value = "/getKhfsbXq/{id}")
+    public AjaxResult getKhfsbXq(@PathVariable("id") String id)
+    {
+        return AjaxResult.success(khfsbService.getKhfsbXq(id));
+    }
+
     /**
      * 新增人员考核分数
      */
@@ -80,6 +90,17 @@ public class KhfsbController extends BaseController
     public AjaxResult add(@RequestBody Khfsb khfsb)
     {
         return toAjax(khfsbService.insertKhfsb(khfsb));
+    }
+
+    /**
+     * 新增人员考核分数详情
+     */
+    @PostMapping("/updateKhfsbXq")
+    public AjaxResult updateKhfsbXq(@RequestBody Khfsxqb khfsxqb)
+    {
+        khfsxqb.setCreateuse(SecurityUtils.getUserId()+"");
+        khfsxqb.setUpdateuse(SecurityUtils.getUserId()+"");
+        return AjaxResult.success(khfsbService.updateKhfsbXq(khfsxqb));
     }
 
     /**

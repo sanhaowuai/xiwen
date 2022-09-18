@@ -2,6 +2,7 @@ package com.xiwen.workload.service;
 
 import java.util.List;
 import com.xiwen.workload.domain.Khfsb;
+import com.xiwen.workload.domain.Khfsxqb;
 
 /**
  * 人员考核分数Service接口
@@ -18,6 +19,7 @@ public interface KhfsbService
      * @return 人员考核分数
      */
     public Khfsb selectKhfsbById(String id);
+    public List<Khfsxqb> getKhfsbXq(String id);
 
     /**
      * 查询人员考核分数列表
@@ -34,6 +36,7 @@ public interface KhfsbService
      * @return 结果
      */
     public int insertKhfsb(Khfsb khfsb);
+    public Khfsxqb updateKhfsbXq(Khfsxqb khfsxqb);
 
     /**
      * 修改人员考核分数

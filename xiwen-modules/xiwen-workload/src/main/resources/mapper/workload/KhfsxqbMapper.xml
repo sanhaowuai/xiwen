@@ -93,10 +93,10 @@
         delete from wf_rykhfsxqb where id = #{id}
     </delete>
 
-    <delete id="deleteKhfsxqbByIds" parameterType="String">
-        delete from wf_rykhfsxqb where id in
+    <update id="deleteKhfsxqbByIds" parameterType="String">
+        update wf_rykhfsxqb set isdel=1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 </mapper>

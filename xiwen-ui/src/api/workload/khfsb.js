@@ -16,6 +16,21 @@ export function getKhfsb(id) {
     method: 'get'
   })
 }
+//
+export function getKhfsbXq(id) {
+  return request({
+    url: '/workload/khfsb/getKhfsbXq/' + id,
+    method: 'get'
+  })
+}
+//
+export function updateKhfsbXq(data) {
+  return request({
+    url: '/workload/khfsb/updateKhfsbXq',
+    method: 'post',
+    data: data
+  })
+}
 
 // 新增人员考核分数
 export function addKhfsb(data) {
@@ -39,6 +54,14 @@ export function updateKhfsb(data) {
 export function delKhfsb(id) {
   return request({
     url: '/workload/khfsb/' + id,
+    method: 'delete'
+  })
+}
+
+// 删除人员考核分数详情
+export function delKhfsxqb(id) {
+  return request({
+    url: '/workload/Khfsxqb/' + id,
     method: 'delete'
   })
 }

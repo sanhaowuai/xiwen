@@ -19,6 +19,10 @@ public class Khfsb extends BaseEntity
 
     /** 主键 */
     private String id;
+    private String yhxm;
+    private String bmmc;
+    private String maxfs;
+    private String minfs;
 
     /** 乐观锁 */
     @Excel(name = "乐观锁")
@@ -50,6 +54,38 @@ public class Khfsb extends BaseEntity
 
     /** 人员考核分数详情信息 */
     private List<Khfsxqb> khfsxqbList;
+
+    public String getMaxfs() {
+        return maxfs;
+    }
+
+    public void setMaxfs(String maxfs) {
+        this.maxfs = maxfs;
+    }
+
+    public String getMinfs() {
+        return minfs;
+    }
+
+    public void setMinfs(String minfs) {
+        this.minfs = minfs;
+    }
+
+    public String getYhxm() {
+        return yhxm;
+    }
+
+    public void setYhxm(String yhxm) {
+        this.yhxm = yhxm;
+    }
+
+    public String getBmmc() {
+        return bmmc;
+    }
+
+    public void setBmmc(String bmmc) {
+        this.bmmc = bmmc;
+    }
 
     public void setId(String id)
     {

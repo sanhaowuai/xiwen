@@ -4,60 +4,72 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xiwen.workload.mapper.KhfsbMapper">
 
-    <resultMap type="Khfsb" id="KhfsbResult">
-        <result property="id"    column="id"    />
-        <result property="verss"    column="verss"    />
-        <result property="isdel"    column="isdel"    />
-        <result property="createtime"    column="createtime"    />
-        <result property="createuse"    column="createuse"    />
-        <result property="updatetime"    column="updatetime"    />
-        <result property="updateuse"    column="updateuse"    />
-        <result property="yhid"    column="yhid"    />
-        <result property="nd"    column="nd"    />
-        <result property="zfs"    column="zfs"    />
-    </resultMap>
-
-    <resultMap id="KhfsbKhfsxqbResult" type="Khfsb" extends="KhfsbResult">
-        <collection property="khfsxqbList" notNullColumn="sub_id" javaType="java.util.List" resultMap="KhfsxqbResult" />
-    </resultMap>
-
-    <resultMap type="Khfsxqb" id="KhfsxqbResult">
-        <result property="id"    column="sub_id"    />
-        <result property="verss"    column="sub_verss"    />
-        <result property="isdel"    column="sub_isdel"    />
-        <result property="createtime"    column="sub_createtime"    />
-        <result property="createuse"    column="sub_createuse"    />
-        <result property="updatetime"    column="sub_updatetime"    />
-        <result property="updateuse"    column="sub_updateuse"    />
-        <result property="rykhfsbid"    column="sub_rykhfsbid"    />
-        <result property="fslx"    column="sub_fslx"    />
-        <result property="fs"    column="sub_fs"    />
-        <result property="ywid"    column="sub_ywid"    />
-        <result property="bz"    column="sub_bz"    />
-    </resultMap>
 
     <sql id="selectKhfsbVo">
         select id, verss, isdel, createtime, createuse, updatetime, updateuse, yhid, nd, zfs from wf_rykhfsb
     </sql>
 
-    <select id="selectKhfsbList" parameterType="Khfsb" resultMap="KhfsbResult">
-        <include refid="selectKhfsbVo"/>
-        <where>
-            <if test="yhid != null  and yhid != ''"> and yhid like concat('%', #{yhid}, '%')</if>
-            <if test="nd != null  and nd != ''"> and nd = #{nd}</if>
-            <if test="zfs != null "> and zfs = #{zfs}</if>
-        </where>
+    <select id="selectKhfsbList" parameterType="com.xiwen.workload.domain.Khfsb" resultType="com.xiwen.workload.domain.Khfsb">
+        SELECT khfsb.id, khfsb.verss, khfsb.isdel, khfsb.createtime, khfsb.createuse,
+        khfsb.updatetime, khfsb.updateuse, u.user_id yhid, ifnull(khfsb.nd, #{nd}) as nd, u.nick_name yhxm,
+        dept.dept_name bmmc, ifnull(khfsb.zfs,0) as zfs
+        FROM sys_user u
+        left join (select * from wf_rykhfsb where nd=#{nd}) khfsb on u.user_id=khfsb.yhid
+        left join sys_dept dept on dept.dept_id = u.dept_id
+        where u.del_flag = 0 and u.user_name != 'admin'
+        <if test="yhxm != null  and yhxm != ''"> and u.nick_name like concat('%', #{yhxm}, '%')</if>
+        <if test="minfs != null  and minfs != ''"> and khfsb.zfs <![CDATA[ >= ]]> #{minfs}</if>
+        <if test="maxfs != null  and maxfs != ''"> and khfsb.zfs <![CDATA[ <= ]]> #{maxfs}</if>
     </select>
 
-    <select id="selectKhfsbById" parameterType="String" resultMap="KhfsbKhfsxqbResult">
+    <select id="selectKhfsbById" parameterType="String" resultType="com.xiwen.workload.domain.Khfsb">
         select a.id, a.verss, a.isdel, a.createtime, a.createuse, a.updatetime, a.updateuse, a.yhid, a.nd, a.zfs,
  b.id as sub_id, b.verss as sub_verss, b.isdel as sub_isdel, b.createtime as sub_createtime, b.createuse as sub_createuse, b.updatetime as sub_updatetime, b.updateuse as sub_updateuse, b.rykhfsbid as sub_rykhfsbid, b.fslx as sub_fslx, b.fs as sub_fs, b.ywid as sub_ywid, b.bz as sub_bz
         from wf_rykhfsb a
         left join wf_rykhfsxqb b on b.rykhfsbid = a.id
         where a.id = #{id}
     </select>
+    <select id="selectKhfsbByRykhId" parameterType="String" resultType="com.xiwen.workload.domain.Khfsb">
+        select a.id, a.verss, a.isdel, a.createtime, a.createuse, a.updatetime, a.updateuse, a.yhid, a.nd, a.zfs
+        from wf_rykhfsb a
+        where a.id = #{id}
+    </select>
+    <select id="getKhfsbXq" parameterType="String" resultType="com.xiwen.workload.domain.Khfsxqb">
+        SELECT
+            xqb.id, date_format(xqb.createtime,'%y-%m-%d') createtimeg, xqb.createuse, xqb.updateuse,
+            date_format(xqb.updatetime,'%y-%m-%d') updatetimeg, xqb.fslx,
+            CASE xqb.fslx  WHEN '1' THEN '加分'  WHEN '2' THEN '减分'  WHEN '3' THEN '初始化' ELSE '其他'  END AS fslxmc,
+            IFNULL( xqb.fs, 0 ) fs, xqb.ywid, xqb.bz, u1.nick_name createUserName, u2.nick_name updateUserName
+        FROM wf_rykhfsxqb xqb
+        LEFT JOIN wf_rykhfsb fsb ON xqb.rykhfsbid = fsb.id
+        LEFT JOIN sys_user u1 ON u1.user_id = xqb.createuse
+        LEFT JOIN sys_user u2 ON u2.user_id = xqb.updateuse
+        WHERE xqb.isdel = 0  AND xqb.rykhfsbid = #{id}
+    </select>
 
-    <insert id="insertKhfsb" parameterType="Khfsb">
+    <insert id="insertKhfsbXq" parameterType="com.xiwen.workload.domain.Khfsxqb">
+         insert into wf_rykhfsxqb(id,verss,isdel,createtime,createuse,updateuse,
+            updatetime,rykhfsbid,fslx,fs,ywid,bz)
+         values(#{id},1,0,sysdate(),#{createuse},#{updateuse},sysdate(),
+         #{rykhfsbid},#{fslx},#{fs},#{ywid},#{bz})
+    </insert>
+    <update id="updateKhfsbXq" parameterType="com.xiwen.workload.domain.Khfsxqb">
+        update wf_rykhfsxqb set updateuse=#{updateuse},updatetime=sysdate(),rykhfsbid=#{rykhfsbid},
+        fslx=#{fslx},fs=#{fs},ywid=#{ywid},bz=#{bz}
+        where id=#{id}
+    </update>
+    <update id="updateKhfsbByXq" parameterType="com.xiwen.workload.domain.Khfsb">
+         update wf_rykhfsb set updatetime=SYSDATE(),updateuse=#{updateuse},zfs=#{zfs}
+        where id = #{id}
+    </update>
+
+
+    <insert id="insertKhfsbTe" parameterType="com.xiwen.workload.domain.Khfsb">
+        insert into wf_rykhfsb(id,verss,isdel,createtime,createuse,updatetime,updateuse,yhid,nd,zfs)
+        values(#{id},1,0,sysdate(),#{createuse},sysdate(),
+        #{updateuse},#{yhid},#{nd},#{zfs})
+    </insert>
+    <insert id="insertKhfsb" parameterType="com.xiwen.workload.domain.Khfsb">
         insert into wf_rykhfsb
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -85,7 +97,7 @@
         </trim>
     </insert>
 
-    <update id="updateKhfsb" parameterType="Khfsb">
+    <update id="updateKhfsb" parameterType="com.xiwen.workload.domain.Khfsb">
         update wf_rykhfsb
         <trim prefix="SET" suffixOverrides=",">
             <if test="verss != null">verss = #{verss},</if>

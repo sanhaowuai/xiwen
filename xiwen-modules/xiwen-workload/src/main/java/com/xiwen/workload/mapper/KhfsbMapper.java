@@ -19,6 +19,9 @@ public interface KhfsbMapper
      * @return 人员考核分数
      */
     public Khfsb selectKhfsbById(String id);
+    public Khfsb selectKhfsbByRykhId(String id);
+    public List<Khfsxqb> getKhfsbXq(String id);
+    public void updateKhfsbByXq(Khfsb khfsb);
 
     /**
      * 查询人员考核分数列表
@@ -35,6 +38,9 @@ public interface KhfsbMapper
      * @return 结果
      */
     public int insertKhfsb(Khfsb khfsb);
+    public int insertKhfsbTe(Khfsb khfsb);
+    public void insertKhfsbXq(Khfsxqb khfsxqb);
+    public void updateKhfsbXq(Khfsxqb khfsxqb);
 
     /**
      * 修改人员考核分数
