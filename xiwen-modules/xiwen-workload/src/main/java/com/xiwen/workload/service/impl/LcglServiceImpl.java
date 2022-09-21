@@ -28,8 +28,7 @@ public class LcglServiceImpl implements LcglService {
     /**
      * @description:描述
      * @author: cuiqichao 
-     * @date: 2022-08-23 22:45:30
-     * @param: lcgl 
+     * @param: lcgl
      * @return: java.util.List<com.xiwen.workload.domain.Lcgl>
     **/
     @Override

@@ -22,7 +22,6 @@ public interface NdbService
     /**
      * @description:查询系统参数表
      * @author: cuiqichao 
-     * @date: 2022-09-18 22:40:38
      * @param: key 参数类型
      * @return: com.xiwen.workload.domain.Ndb
     **/

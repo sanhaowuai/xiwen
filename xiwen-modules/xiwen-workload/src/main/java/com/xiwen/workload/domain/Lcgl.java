@@ -13,7 +13,6 @@ import java.util.List;
  * @Version: 1.0
  */
 public class Lcgl extends BaseEntity {
-
     private String lcmc;
     private int verss;
     private String isdel;

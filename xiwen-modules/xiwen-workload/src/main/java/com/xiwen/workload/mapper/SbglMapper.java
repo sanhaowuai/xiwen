@@ -2,8 +2,10 @@ package com.xiwen.workload.mapper;
 
 import java.util.List;
 
+import com.xiwen.workload.domain.Lcgl;
 import com.xiwen.workload.domain.SbCyry;
 import com.xiwen.workload.domain.Sbgl;
+import com.xiwen.workload.domain.Shjlb;
 
 /**
  * 申报管理Mapper接口
@@ -28,6 +30,7 @@ public interface SbglMapper
      * @return 申报管理集合
      */
     public List<Sbgl> selectSbglList(Sbgl sbgl);
+    public List<Sbgl> selectSbshglList(Sbgl sbgl);
     public List<SbCyry> queryCyryList(SbCyry sbCyry);
     public List<SbCyry> querySbcyryList(Sbgl sbgl);
     public SbCyry getUserByDlr(SbCyry sbCyry);
@@ -40,6 +43,7 @@ public interface SbglMapper
      */
     public int insertSbgl(Sbgl sbgl);
     public int insertSbCyry(SbCyry sbCyry);
+    public int updateSbCyry(SbCyry sbCyry);
 
     /**
      * 修改申报管理
@@ -57,6 +61,11 @@ public interface SbglMapper
      * @return 结果
      */
     public int deleteSbglById(String id);
+    public List<Lcgl> getLcjdbList(String lcid);
+    public String getLcShr(String roleid);
+    public int insertShjlb(Shjlb shjlb);
+    public int updateSbglShlc(Sbgl sbgl);
+    public int updateSbglShzt(Sbgl sbgl);
 
     /**
      * 批量删除申报管理

@@ -20,6 +20,15 @@ public class SbCyry {
     private String df;
     private String gznr;
     private String bmmc;
+    private String shdf;
+
+    public String getShdf() {
+        return shdf;
+    }
+
+    public void setShdf(String shdf) {
+        this.shdf = shdf;
+    }
 
     public String getId() {
         return id;

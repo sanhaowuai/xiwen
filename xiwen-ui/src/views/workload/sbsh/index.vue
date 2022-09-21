@@ -26,43 +26,10 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" plain icon="el-icon-s-operation" size="mini" @click="handleAdd" v-hasPermi="['workload:sbsh:add']"
+        >批量审核</el-button>
       </el-form-item>
     </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['workload:sbgl:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['workload:sbgl:remove']"
-        >删除</el-button>
-      </el-col>
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="warning"-->
-<!--          plain-->
-<!--          icon="el-icon-download"-->
-<!--          size="mini"-->
-<!--          @click="handleExport"-->
-<!--          v-hasPermi="['workload:sbgl:export']"-->
-<!--        >导出</el-button>-->
-<!--      </el-col>-->
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
 
     <el-table v-loading="loading" :data="sbglList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="checkedSelectRow"/>
@@ -86,21 +53,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['workload:sbgl:edit']"
-          >修改</el-button>
-          <el-button v-if="scope.row.shzt == '0'"
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['workload:sbgl:remove']"
-          >删除</el-button>
+            v-hasPermi="['workload:sbsh:edit']"
+          >审核</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-search"
             @click="handleView(scope.row)"
-            v-hasPermi="['workload:sbgl:remove']"
+            v-hasPermi="['workload:sbsh:remove']"
           >查看</el-button>
         </template>
       </el-table-column>
@@ -158,7 +118,7 @@
     <el-dialog :title="title" :visible.sync="open" width="720px" append-to-body :close-on-press-escape="false" :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" :inline="true" label-width="100px" style="padding: 5px 15px;">
         <el-form-item label="类型" prop="sqlx" class="el-form-item-margin">
-          <el-select v-model="form.sqlx" placeholder="请选择考核类型" style="width: 200px" @change="getCyryTreeselect()">
+          <el-select v-model="form.sqlx" placeholder="请选择考核类型" style="width: 200px" disabled @change="getCyryTreeselect()">
             <el-option
               v-for="dict in dict.type.workload_khxlx"
               :key="dict.value"
@@ -169,11 +129,11 @@
         </el-form-item>
 
         <el-form-item label="考核项" prop="ksxid" class="el-form-item-margin">
-          <treeselect style="width: 200px" v-model="form.ksxid" :options="khxglOptionsCyry" :clearable="false"
+          <treeselect style="width: 200px" v-model="form.ksxid" :options="khxglOptionsCyry" :clearable="false" disabled
                      @input="checkedKhxdyfs" :normalizer="normalizerCyry" placeholder="请选择考核项" />
         </el-form-item>
         <el-form-item label="开始时间" prop="gzkssj" class="el-form-item-margin">
-          <el-date-picker @change="checkedGzkssj('1')"
+          <el-date-picker @change="checkedGzkssj('1')" disabled
             style="width: 200px"
             v-model="form.gzkssj"
             type="datetime"
@@ -184,7 +144,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间" prop="gzjssj" class="el-form-item-margin">
-          <el-date-picker @change="checkedGzkssj('2')"
+          <el-date-picker @change="checkedGzkssj('2')" disabled
             style="width: 200px"
             v-model="form.gzjssj"
             type="datetime"
@@ -195,45 +155,48 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="工作时长" prop="gzsc" class="el-form-item-margin">
-          <el-input v-model="form.gzsc" placeholder="请输入工作时长" style="width: 160px"/>小时
+          <el-input v-model="form.gzsc" placeholder="请输入工作时长" style="width: 173px" disabled/>小时
         </el-form-item>
         <el-form-item label="总分值" prop="sqfz" class="el-form-item-margin">
-          <el-input v-model="form.sqfz" placeholder="请输入申请分值" style="width: 130px"/>预设<span style="color: red;">{{form.tempSqfz}}</span>分
+          <el-input v-model="form.sqfz" placeholder="请输入申请分值" style="width: 130px" disabled/>预设<span style="color: red;">{{form.tempSqfz}}</span>分
         </el-form-item>
         <el-form-item label="参与人"  class="el-form-item-margin">
-          <slot>
-            <el-button type="primary" plain icon="el-icon-plus" style="padding: 6px 9px;" title="添加参与人"
-                       @click="showCyrDialog" size="mini" ></el-button>
-            <el-button type="primary" plain style="padding: 6px 9px;" title="计算每人得分，不能平均分配的，请手动修改分值分配"
-                       @click="avgCyryFz" size="mini" >总分值平均分配</el-button>
-          </slot>
+<!--          <slot>-->
+<!--            <el-button type="primary" plain icon="el-icon-plus" style="padding: 6px 9px;" title="添加参与人"-->
+<!--                       @click="showCyrDialog" size="mini" ></el-button>-->
+<!--            <el-button type="primary" plain style="padding: 6px 9px;" title="计算每人得分，不能平均分配的，请手动修改分值分配"-->
+<!--                       @click="avgCyryFz" size="mini" >总分值平均分配</el-button>-->
+<!--          </slot>-->
           <table border="1" style="border-collapse: collapse;text-align: center;">
             <tr>
               <td style="width:80px">姓名</td>
-              <td style="width:110px">得分</td>
-              <td style="width:295px">工作分配</td>
-              <td style="width:50px"></td>
+              <td style="width:70px">申请得分</td>
+              <td style="width:110px">审核得分</td>
+              <td style="width:270px">工作分配</td>
             </tr>
             <template v-for="(item, index) in cyryList">
               <tr>
                 <td>{{item.yhxm}}</td>
-                <td><el-input-number size="mini" v-model="item.df" style="width: 100px;" :min="0.01"></el-input-number></td>
-                <td><el-input v-model="item.gznr" placeholder="请输入工作内容" style="width: 295px"/></td>
-                <td><el-button type="danger" plain icon="el-icon-delete" style="padding: 6px 9px;"
-                               @click="handleDeleteCyry(item,index)" size="mini" ></el-button></td>
+                <td>{{item.df}}</td>
+                <td><el-input-number size="mini" v-model="item.shdf" style="width: 100px;" :min="0.01"></el-input-number></td>
+                <td style="text-align: left"><span>{{item.gznr}}</span></td>
               </tr>
             </template>
           </table>
         </el-form-item>
         <el-form-item label="工作内容" prop="gzjs" class="el-form-item-margin">
-          <el-input v-model="form.gzjs" type="textarea" placeholder="请输入工作内容" style="width: 520px" :autosize="{ minRows: 4, maxRows: 6}"/>
+          <el-input v-model="form.gzjs" type="textarea" disabled placeholder="请输入工作内容" style="width: 520px" :autosize="{ minRows: 4, maxRows: 6}"/>
+        </el-form-item>
+        <el-form-item label="审核意见" prop="gzjs" class="el-form-item-margin">
+          <el-input v-model="form.shyj" type="textarea" placeholder="请输入审核意见" style="width: 520px" :autosize="{ minRows: 2, maxRows: 4}"/>
         </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm('0')">保 存</el-button>
-        <el-button type="primary" @click="submitForm('1')">提 交</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitForm('2')">通 过</el-button>
+        <el-button type="info" @click="submitForm('3')">不通过</el-button>
+        <el-button type="warning" v-show="form.gzjs == '1'" @click="submitForm('4')">驳 回</el-button>
+        <el-button @click="cancel">关 闭</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -282,8 +245,8 @@
 </template>
 
 <script>
-  import { listSbgl, getSbgl, delSbgl, addSbgl, updateSbgl,
-    queryCyryList,getUserByDlr,querySbcyryList,getWfConfig } from "@/api/workload/sbgl";
+  import { listSbshgl, getSbgl, delSbgl, addSbgl, updateSbsh,
+    queryCyryList,getUserByDlr,querySbcyryList,getWfConfig } from "@/api/workload/sbsh";
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import { listKhxglZs, getKhxgl } from "@/api/workload/khxgl";
@@ -600,7 +563,7 @@
       /** 查询申报管理列表 */
       getList() {
         this.loading = true;
-        listSbgl(this.queryParams).then(response => {
+        listSbshgl(this.queryParams).then(response => {
           this.sbglList = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -787,76 +750,57 @@
       /** 提交按钮 */
       async submitForm(sftj) {
         let self = this
-        this.$refs["form"].validate(valid => {
-          if (valid) {
-            //判断是否可申报 this.sbxzts  form.gzkssj
-            if('0' === this.sbxzts || 0 === this.sbxzts){
-              let date1 = new Date(this.form.gzkssj)
-              let date2 = this.sbxztsDqsj
-              if(date1 < date2){
-                this.$modal.msgWarning("当前工作已过系统设置天数，不可申报上月的工作量！")
-                throw SyntaxError();
-              }
-            }
-            let tempSumFs = 0.00 //实际分配总分数
-            let tempYsfz = 0.00 //考核项预设分值
-            let tempZfz = 0.00 // 输入的总分值
-            // debugger
-            if(this.form.ksxid !== null && this.form.ksxid !== '' && this.form.ksxid !== '0' && this.form.ksxid !== 0){// 判断分数
-              getKhxgl(this.form.ksxid).then(response => {
-                let tempObj = response.data;
-                tempYsfz = parseFloat(tempObj.ysfz)
-                tempZfz = parseFloat(this.form.sqfz)
-                 if(tempZfz > tempYsfz){
-                   this.$modal.msgWarning('总分值不能大于考核项预设分值!');
-                   throw SyntaxError();
-                   return
+        let tempSumFs = 0.00 //实际分配总分数
+        let tempYsfz = 0.00 //考核项预设分值
+        let tempZfz = 0.00 // 输入的总分值
+        // debugger
+        if(this.form.ksxid !== null && this.form.ksxid !== '' && this.form.ksxid !== '0' && this.form.ksxid !== 0){// 判断分数
+          getKhxgl(this.form.ksxid).then(response => {
+            let tempObj = response.data;
+            tempYsfz = parseFloat(tempObj.ysfz)
+            tempZfz = parseFloat(this.form.sqfz)
+             if(tempZfz > tempYsfz){
+               this.$modal.msgWarning('总分值不能大于考核项预设分值!');
+               throw SyntaxError();
+               return
+             }else{
+               let tempSumFs = 0.00
+               this.cyryList.forEach(t => {
+                 tempSumFs += parseFloat(t.shdf)
+               })
+               if(tempSumFs > parseFloat(this.form.sqfz)){
+                 this.$modal.msgWarning('审核分数总和不能大于预设分值!');
+                 throw SyntaxError();
+                 return
+               }{
+                 if(tempZfz < tempYsfz){
+                   this.$modal.confirm('当前审核分数总和（' + tempZfz + '）小于预设分值（' + tempYsfz + '），是否继续操作？').then(function() {
+                     self.updDataSer(sftj)
+                   }).catch(() => {});
                  }else{
-                   if(this.cyryList.length < 1){//判断参与人
-                     this.$modal.msgWarning('参与人不能为空，请先选择参与人!');
-                     throw SyntaxError();
-                     return
-                   }else{
-                     let tempSumFs = 0.00
-                     this.cyryList.forEach(t => {
-                       tempSumFs += parseFloat(t.df)
-                     })
-                     if(tempSumFs !== parseFloat(this.form.sqfz)){
-                       this.$modal.msgWarning('分配分数:' + tempSumFs + '和总分值:' + parseFloat(this.form.sqfz) + '不相同，请修改!');
-                       throw SyntaxError();
-                       return
-                     }else{
-                       if(tempZfz < tempYsfz){
-                         this.$modal.confirm('当前申报的分配总分（' + tempZfz + '）小于预设分值（' + tempYsfz + '），是否继续操作？').then(function() {
-                           self.updDataSer(sftj)
-                         }).catch(() => {});
-                       }else{
-                         self.updDataSer(sftj)
-                       }
-                     }
-                   }
+                   self.updDataSer(sftj)
                  }
-              });
-            }else{
-              this.$modal.msgWarning('请选择正确的考核项!');
-              throw SyntaxError();
-              return
-            }
-          }
-        });
+               }
+             }
+          });
+        }else{
+          this.$modal.msgWarning('请选择正确的考核项!');
+          throw SyntaxError();
+          return
+        }
       },
       //调用保存修改接口
       updDataSer(sftj){
         this.form.cyryTList = this.cyryList;
         this.form.shzt = sftj
         if (this.form.id != null) {
-          updateSbgl(this.form).then(response => {
+          updateSbsh(this.form).then(response => {
             this.$modal.msgSuccess(response.data.msg);
             this.open = false;
             this.getList();
           });
         } else {
-          updateSbgl(this.form).then(response => {
+          updateSbsh(this.form).then(response => {
             this.$modal.msgSuccess(response.data.msg);
             this.open = false;
             this.getList();

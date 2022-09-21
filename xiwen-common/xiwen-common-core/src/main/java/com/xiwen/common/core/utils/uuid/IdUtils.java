@@ -53,7 +53,6 @@ public class IdUtils {
     /**
      * @description:获取雪花算法的id
      * @author: cuiqichao
-     * @date: 2022-08-29 22:18:37
      * @return: java.lang.String
     **/
     public static String getSnowflakeId(){

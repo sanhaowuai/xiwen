@@ -1,6 +1,7 @@
 package com.xiwen.workload.controller;
 
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,6 +41,17 @@ public class SbglController extends BaseController
     {
         startPage();
         List<Sbgl> list = sbglService.selectSbglList(sbgl);
+        return getDataTable(list);
+    }
+    /**
+     * 查询申报管理列表
+     */
+    @GetMapping("/getSbshList")
+    public TableDataInfo getSbshList(Sbgl sbgl)
+    {
+        startPage();
+        sbgl.setShr(SecurityUtils.getUserId()+"");
+        List<Sbgl> list = sbglService.selectSbshglList(sbgl);
         return getDataTable(list);
     }
 
@@ -123,8 +135,23 @@ public class SbglController extends BaseController
         sbgl.setCreateuse(SecurityUtils.getUserId()+"");
         sbgl.setUpdateuse(SecurityUtils.getUserId()+"");
         sbgl.setSqr(SecurityUtils.getUserId()+"");
-        int resInt = sbglService.updateSbgl(sbgl);
-        return toAjax(resInt);
+        Map<String,String> resMap = sbglService.updateSbgl(sbgl);
+        return AjaxResult.success(resMap);
+    }
+    /**
+     * @description:审核
+     * @author: cuiqichao
+     * @param: sbgl
+     * @return: com.xiwen.common.core.web.domain.AjaxResult
+    **/
+    @PutMapping("/updateSbsh")
+    public AjaxResult updateSbsh(@RequestBody Sbgl sbgl)
+    {
+        sbgl.setCreateuse(SecurityUtils.getUserId()+"");
+        sbgl.setUpdateuse(SecurityUtils.getUserId()+"");
+        sbgl.setSqr(SecurityUtils.getUserId()+"");
+        Map<String,String> resMap = sbglService.updateSbsh(sbgl);
+        return AjaxResult.success(resMap);
     }
 
     /**

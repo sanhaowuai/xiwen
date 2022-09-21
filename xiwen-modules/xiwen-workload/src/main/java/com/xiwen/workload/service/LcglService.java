@@ -17,7 +17,6 @@ public interface LcglService {
     /**
      * @description:查询流程列表 分页
      * @author: cuiqichao
-     * @date: 2022-08-23 22:44:39
      * @param: lcgl
      * @return: java.util.List<com.xiwen.workload.domain.Lcgl>
     **/

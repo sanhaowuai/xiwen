@@ -47,6 +47,8 @@ public class Sbgl extends BaseEntity
     private String sqlxmc;
     /** 申请时间 */
     private String sbsj;
+    private String shr;
+    private String sfkbh;
 
 
     /** 流程id wf_ywlcb.id */
@@ -90,6 +92,22 @@ public class Sbgl extends BaseEntity
     /** 审核状态 字典表flow_status */
     @Excel(name = "审核状态 字典表flow_status")
     private String shzt;
+
+    public String getShr() {
+        return shr;
+    }
+
+    public void setShr(String shr) {
+        this.shr = shr;
+    }
+
+    public String getSfkbh() {
+        return sfkbh;
+    }
+
+    public void setSfkbh(String sfkbh) {
+        this.sfkbh = sfkbh;
+    }
 
     public String getSbsj() {
         return sbsj;

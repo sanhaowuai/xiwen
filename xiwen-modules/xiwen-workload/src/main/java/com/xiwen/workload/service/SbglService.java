@@ -1,6 +1,7 @@
 package com.xiwen.workload.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.xiwen.workload.domain.SbCyry;
 import com.xiwen.workload.domain.Sbgl;
@@ -28,6 +29,7 @@ public interface SbglService
      * @return 申报管理集合
      */
     public List<Sbgl> selectSbglList(Sbgl sbgl);
+    public List<Sbgl> selectSbshglList(Sbgl sbgl);
     public List<SbCyry> queryCyryList(SbCyry sbCyry);
     public List<SbCyry> querySbcyryList(Sbgl sbgl);
     public SbCyry getUserByDlr(SbCyry sbCyry);
@@ -46,7 +48,8 @@ public interface SbglService
      * @param sbgl 申报管理
      * @return 结果
      */
-    public int updateSbgl(Sbgl sbgl);
+    public Map<String,String> updateSbgl(Sbgl sbgl);
+    public Map<String,String> updateSbsh(Sbgl sbgl);
 
     /**
      * 批量删除申报管理
