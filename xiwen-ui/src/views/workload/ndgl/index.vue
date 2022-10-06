@@ -98,6 +98,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-divider content-position="center"><span style="color: red;">年度格式:四位数字，例:2022</span></el-divider>
+        <div style="margin-top: 30px;">&nbsp;</div>
         <el-form-item label="年度" prop="nd">
           <el-input type="number" v-model="form.nd" placeholder="请输入年度" />
         </el-form-item>

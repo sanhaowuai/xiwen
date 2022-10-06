@@ -1,6 +1,9 @@
 package com.xiwen.workload.mapper;
 
 import java.util.List;
+import java.util.Map;
+
+import com.xiwen.system.api.domain.SysUser;
 import com.xiwen.workload.domain.Khfsxqb;
 
 /**
@@ -18,6 +21,7 @@ public interface KhfsxqbMapper
      * @return 人员考核分数详情
      */
     public Khfsxqb selectKhfsxqbById(String id);
+    public String getUserByYhidAndYhxm(Map<String,String> paramMap);
 
     /**
      * 查询人员考核分数详情列表

@@ -1,6 +1,8 @@
 package com.xiwen.workload.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.xiwen.workload.domain.Khfsxqb;
 
 /**
@@ -58,4 +60,5 @@ public interface KhfsxqbService
      * @return 结果
      */
     public int deleteKhfsxqbById(String id);
+    public Map<String,Object> uploadKhfsb(List<Map<String,String>> excelList);
 }

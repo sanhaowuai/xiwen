@@ -432,7 +432,7 @@
         this.reset();
         const id = row.id
         getLcxxById(id).then(response => {
-          this.form = response.data;
+          this.form = JSON.parse(JSON.stringify(response.data));
           if(this.form.sfkbh === "1"){
             this.bhxxDisable = true
           }else{

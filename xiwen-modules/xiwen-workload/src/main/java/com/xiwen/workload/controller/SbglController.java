@@ -6,7 +6,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xiwen.common.security.utils.SecurityUtils;
+import com.xiwen.workload.domain.Lcgl;
 import com.xiwen.workload.domain.SbCyry;
+import com.xiwen.workload.domain.Shjlb;
 import com.xiwen.workload.service.SbglService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +43,17 @@ public class SbglController extends BaseController
     {
         startPage();
         List<Sbgl> list = sbglService.selectSbglList(sbgl);
+        return getDataTable(list);
+    }
+    /**
+     * 查询申报管理列表
+     */
+    @RequiresPermissions("workload:sbgl:list")
+    @GetMapping("/shList")
+    public TableDataInfo shList(Sbgl sbgl)
+    {
+        startPage();
+        List<Sbgl> list = sbglService.selectShSbglList(sbgl);
         return getDataTable(list);
     }
     /**
@@ -90,6 +103,29 @@ public class SbglController extends BaseController
         util.exportExcel(response, list, "申报管理数据");
     }
 
+    @GetMapping(value = "/getShdqjd/{sqid}")
+    public AjaxResult getShdqjd(@PathVariable("sqid") String sqid)
+    {
+        Lcgl lcgl = sbglService.getShdqjd(sqid);
+        if(lcgl == null ){
+            lcgl = new Lcgl();
+            lcgl.setPx(0);
+        }
+        return AjaxResult.success(lcgl);
+    }
+
+    @GetMapping(value = "/getShjlList/{sqid}")
+    public AjaxResult getShjlList(@PathVariable("sqid") String sqid)
+    {
+        List<Shjlb> list = sbglService.getShjlList(sqid);
+        return AjaxResult.success(list);
+    }
+    @GetMapping(value = "/getLcjdxx/{sqid}")
+    public AjaxResult getLcjdxx(@PathVariable("sqid") String sqid)
+    {
+        List<Lcgl> list = sbglService.getLcjdxx(sqid);
+        return AjaxResult.success(list);
+    }
     /**
      * 获取申报管理详细信息
      */

@@ -35,6 +35,32 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-dropdown style="margin-left: 20px;">
+          <el-button type="primary" size="mini">
+            导入...<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>
+              <el-upload
+                class="upload"
+                action="#"
+                :show-file-list="false"
+                :on-change="handleExcel"
+                accept=".xlsx,.xls"
+                :auto-upload="false"
+                :headers="headers">
+                <el-button size="mini" type="text">导入</el-button>
+              </el-upload>
+            </el-dropdown-item>
+            <el-dropdown-item>
+              <el-button
+                type="text"
+                size="mini"
+                @click="downloadFile('1')"
+              >计划维护</el-button>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-form-item>
     </el-form>
 
@@ -122,7 +148,9 @@
 </template>
 
 <script>
-  import { listKhfsb, getKhfsb, delKhfsxqb,getKhfsbXq,delKhfsb, addKhfsb, updateKhfsb,updateKhfsbXq } from "@/api/workload/khfsb";
+  import { listKhfsb, getKhfsb, delKhfsxqb,getKhfsbXq,
+    delKhfsb, addKhfsb, updateKhfsb,updateKhfsbXq,downloadFileSer,
+    updateFile} from "@/api/workload/khfsb";
   import { getNdList} from "@/api/workload/ndgl";
 
   export default {
@@ -131,6 +159,7 @@
       return {
         // 遮罩层
         loading: true,
+        headers: { "Content-Type" : "multipart/form-data;charset=UTF-8" },
         // 选中数组
         ids: [],
         // 子表选中数据
@@ -180,6 +209,57 @@
       this.getNdList();
     },
     methods: {
+      downloadFile(lx) {
+        downloadFileSer({lx: lx} ).then(res => {
+          const link = document.createElement("a");
+          let blob = new Blob([res], { type: "application/vnd.ms-excel" });  //文件流处理
+          link.style.display = "none";  //去除a标签的样式
+          // 设置连接
+          link.href = URL.createObjectURL(blob);
+          link.download = '人员初始分导入.xlsx';
+          document.body.appendChild(link);
+          // 模拟点击事件
+          link.click();
+          // 下载完成移除元素
+          document.body.removeChild(link)
+        })
+      },
+      handleExcel(file) {
+        const FILE_NAME = file.name
+        if (FILE_NAME.substring(FILE_NAME.lastIndexOf('.')) !== '.xls' && FILE_NAME.substring(FILE_NAME.lastIndexOf('.')) !== '.xlsx') {
+          this.$message.warning('仅支持.xls和.xlsx文件')
+          return false
+        }
+        const isLt1M = file.size / 1024 / 1024 < 5
+        if (isLt1M) {
+          this.file = file
+        } else {
+          this.$message.warning('请上传不超过5M的文件.')
+          return false
+        }
+        const formData = new FormData() // 声明一个FormDate对象
+        formData.append('file', file.raw) // 把文件信息放入对象中
+        // 调用后台导入的接口
+        updateFile(formData).then(res => {
+          console.log(res)
+          if (res.data.myCode === 200) {
+            this.$message.success("导入成功");
+            this.getList(); // 导入表格之后可以获取导入的数据渲染到页面，此处的方法是获取导入的数据
+          } else {
+            let tempList = JSON.parse(JSON.stringify(res.data.errorList));
+            tempList.forEach(map => {
+              tempMsg = tempMsg + "|" + map.msg
+            });
+            this.$message.error(tempMsg)
+          }
+        }).catch(err => {
+          console.log(err)
+          this.$message({
+            type: 'error',
+            message: '导入失败'
+          })
+        })
+      },
       //查询年度
       getNdList(){
         getNdList({}).then(res => {

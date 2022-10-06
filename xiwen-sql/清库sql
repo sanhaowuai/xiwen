@@ -1,0 +1,12 @@
+delete  from wf_jqfszb;#加权分表
+delete  from wf_khxb;#
+delete  from wf_rykhfsb;#
+delete  from wf_rykhfsxqb;#
+delete  from wf_sqb_shjlb;#
+delete  from wf_sqb_glb;#
+delete  from wf_sqb_sjfb;#
+delete  from wf_sqb_cyrb;#
+delete  from wf_ywlcb;#
+delete  from wf_ywlcjdb;#
+delete  from sys_logininfor;
+delete  from sys_oper_log;

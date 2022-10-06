@@ -3,8 +3,10 @@ package com.xiwen.workload.service;
 import java.util.List;
 import java.util.Map;
 
+import com.xiwen.workload.domain.Lcgl;
 import com.xiwen.workload.domain.SbCyry;
 import com.xiwen.workload.domain.Sbgl;
+import com.xiwen.workload.domain.Shjlb;
 
 /**
  * 申报管理Service接口
@@ -29,6 +31,10 @@ public interface SbglService
      * @return 申报管理集合
      */
     public List<Sbgl> selectSbglList(Sbgl sbgl);
+    public List<Sbgl> selectShSbglList(Sbgl sbgl);
+    public List<Lcgl> getLcjdxx(String sqid);
+    public List<Shjlb> getShjlList(String sqid);
+    public Lcgl getShdqjd(String sqid);
     public List<Sbgl> selectSbshglList(Sbgl sbgl);
     public List<SbCyry> queryCyryList(SbCyry sbCyry);
     public List<SbCyry> querySbcyryList(Sbgl sbgl);

@@ -49,7 +49,46 @@ public class Sbgl extends BaseEntity
     private String sbsj;
     private String shr;
     private String sfkbh;
+    private String shyj;
+    private String shnr;
+    private String lblx;
+    private String yhid;
 
+    public String getYhid() {
+        return yhid;
+    }
+
+    public void setYhid(String yhid) {
+        this.yhid = yhid;
+    }
+
+    public String getLblx() {
+        return lblx;
+    }
+
+    public void setLblx(String lblx) {
+        this.lblx = lblx;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getShyj() {
+        return shyj;
+    }
+
+    public void setShyj(String shyj) {
+        this.shyj = shyj;
+    }
+
+    public String getShnr() {
+        return shnr;
+    }
+
+    public void setShnr(String shnr) {
+        this.shnr = shnr;
+    }
 
     /** 流程id wf_ywlcb.id */
     @Excel(name = "流程id wf_ywlcb.id")

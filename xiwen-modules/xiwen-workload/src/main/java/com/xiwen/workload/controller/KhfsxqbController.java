@@ -1,29 +1,28 @@
 package com.xiwen.workload.controller;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.io.IOException;
+import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSON;
+import com.xiwen.system.api.domain.SysUser;
+import com.xiwen.workload.common.ImportExcelUtil;
+import com.xiwen.workload.common.importTitle.ImportExcelKhfsbTitle;
 import com.xiwen.workload.service.KhfsxqbService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.xiwen.common.log.annotation.Log;
 import com.xiwen.common.log.enums.BusinessType;
 import com.xiwen.common.security.annotation.RequiresPermissions;
 import com.xiwen.workload.domain.Khfsxqb;
-import com.xiwen.workload.service.KhfsxqbService;
 import com.xiwen.common.core.web.controller.BaseController;
 import com.xiwen.common.core.web.domain.AjaxResult;
 import com.xiwen.common.core.utils.poi.ExcelUtil;
 import com.xiwen.common.core.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 人员考核分数详情Controller
@@ -105,4 +104,88 @@ public class KhfsxqbController extends BaseController
     {
         return toAjax(khfsxqbService.deleteKhfsxqbByIds(ids));
     }
+
+    /**
+     * @description:导入
+     * @author: cuiqichao
+     * @param: file
+    **/
+    @PostMapping("/uploadFile")
+    public AjaxResult uploadFile(@RequestParam("file") MultipartFile file){
+        List<Map<String, String>> excelList = new ArrayList<>();
+        Map<String,Object> resMap = new HashMap<>();
+        try {
+            excelList = ImportExcelUtil.parseExcel(
+                    file.getInputStream(),
+                    file.getOriginalFilename(),
+                    ImportExcelKhfsbTitle.ExpertImportExcel.getKeyValue());
+            resMap = khfsxqbService.uploadKhfsb(excelList);
+        } catch (IOException e) {
+            System.out.println("解析excel时失败" + e.getMessage());
+        }
+        return AjaxResult.success(resMap);
+    }
+
+    /**
+     * @description:下载文件
+     * @author: cuiqichao
+     * @param: lx
+     * @param: response
+     * @return: javax.servlet.http.HttpServletResponse
+    **/
+    @GetMapping("/downloadFileSer")
+    public byte[] downloadFileSer(String lx, HttpServletResponse response) {
+        byte[] buffer = null;
+        try {
+            // path是指欲下载的文件的路径。
+            String path = "";
+            String projectUrl = this.getClass().getResource("/").getPath();
+            if("1".equals(lx)){
+                path = projectUrl + "static/rycsdrfsa.xlsx";
+            }
+            File file = new File(path);
+            // 取得文件名。
+            String filename = file.getName();
+            // 取得文件的后缀名。
+            String ext = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
+            // 以流的形式下载文件。
+            InputStream fis = new BufferedInputStream(new FileInputStream(path));
+            buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+//            // 清空response
+//            response.reset();
+//            // 设置response的Header
+//            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
+//            response.addHeader("Content-Length", "" + file.length());
+//            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+//            toClient.write(buffer);
+//            toClient.flush();
+//            toClient.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return buffer;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

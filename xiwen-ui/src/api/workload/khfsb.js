@@ -65,3 +65,21 @@ export function delKhfsxqb(id) {
     method: 'delete'
   })
 }
+// 下载文件
+export function downloadFileSer(data) {
+  return request({
+    url: `/workload/Khfsxqb/downloadFileSer`,
+    method: 'get',
+    responseType: 'blob', // 表明返回服务器返回的数据类型
+    params: data
+  })
+}
+// 上传文件
+export function updateFile(data) {
+  return request({
+    url: `/workload/Khfsxqb/uploadFile`,
+    method: 'post',
+    headers: { "Content-Type" : "multipart/form-data;charset=UTF-8" },
+    data: data
+  })
+}

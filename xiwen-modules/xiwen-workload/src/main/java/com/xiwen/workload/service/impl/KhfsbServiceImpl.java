@@ -84,7 +84,7 @@ public class KhfsbServiceImpl implements KhfsbService
             khfsba.setCreateuse(khfsxqb.getCreateuse());
             khfsba.setYhid(khfsxqb.getYhid());
             khfsba.setNd(khfsxqb.getNd());
-            if("1".equals(khfsxqb.getFslx())){
+            if("1".equals(khfsxqb.getFslx()) || "3".equals(khfsxqb.getFslx())){
                 khfsba.setZfs(khfsxqb.getFs());
             }else{
                 khfsba.setZfs(khfsxqb.getFs().negate());
@@ -95,7 +95,7 @@ public class KhfsbServiceImpl implements KhfsbService
             khfsb.setUpdateuse(khfsxqb.getUpdateuse());
             BigDecimal yfs = khfsb.getZfs();
             BigDecimal xfs = khfsxqb.getFs();
-            if("1".equals(khfsxqb.getFslx())){
+            if("1".equals(khfsxqb.getFslx()) || "3".equals(khfsxqb.getFslx())){
                 khfsb.setZfs(yfs.add(xfs));
             }else if("2".equals(khfsxqb.getFslx())){
                 khfsb.setZfs(yfs.subtract(xfs));

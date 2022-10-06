@@ -78,6 +78,33 @@
             <artifactId>xiwen-common-swagger</artifactId>
         </dependency>
 
+        <!--添加POI的依赖用于Excel的操作 begin-->
+        <!--xls(03)-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.17</version>
+        </dependency>
+        <!--xlsx(07)-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-schemas</artifactId>
+            <version>3.17</version>
+        </dependency>
+        <!--添加POI的依赖用于Excel的操作 end-->
+        <!--时间格式化工具-->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.10.6</version>
+        </dependency>
+        <!--添加POI的依赖用于Excel的操作 end-->
+
     </dependencies>
 
     <build>

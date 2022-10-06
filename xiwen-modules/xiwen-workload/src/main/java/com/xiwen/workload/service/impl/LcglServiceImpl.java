@@ -55,6 +55,7 @@ public class LcglServiceImpl implements LcglService {
     }
     public Lcgl updateLcgl(Lcgl lcgl){
         lcglMapper.updateLcgl(lcgl);
+        lcgl.setLcid(lcgl.getId());
         lcglMapper.deleteLcjd(lcgl);
         List<Lcgl> jdList = lcgl.getJdList();
         int i = 1;

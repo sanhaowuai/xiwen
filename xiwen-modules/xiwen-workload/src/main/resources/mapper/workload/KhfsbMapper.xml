@@ -62,6 +62,9 @@
          update wf_rykhfsb set updatetime=SYSDATE(),updateuse=#{updateuse},zfs=#{zfs}
         where id = #{id}
     </update>
+    <select id="getKsfsbByYhidAndNd" parameterType="java.util.HashMap" resultType="com.xiwen.workload.domain.Khfsxqb">
+        select * from wf_rykhfsb where yhid=#{yhid} and nd=#{nd}
+    </select>
 
 
     <insert id="insertKhfsbTe" parameterType="com.xiwen.workload.domain.Khfsb">

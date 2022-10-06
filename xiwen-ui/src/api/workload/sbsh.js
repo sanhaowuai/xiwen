@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function listSbshgl(query) {
   return request({
     // url: '/workload/sbgl/getSbshList',
-    url: '/workload/sbgl/list',
+    url: '/workload/sbgl/shList',
     method: 'get',
     params: query
   })
@@ -22,6 +22,27 @@ export function queryCyryList(query) {
 export function getSbgl(id) {
   return request({
     url: '/workload/sbgl/' + id,
+    method: 'get'
+  })
+}
+// 查询流程节点信息
+export function getLcjdxx(sqid) {
+  return request({
+    url: '/workload/sbgl/getLcjdxx/' + sqid,
+    method: 'get'
+  })
+}
+// 查询申报进行到那个节点排序
+export function getShdqjd(sqid) {
+  return request({
+    url: '/workload/sbgl/getShdqjd/' + sqid,
+    method: 'get'
+  })
+}
+// 查询申报审核记录list
+export function getShjlList(sqid) {
+  return request({
+    url: '/workload/sbgl/getShjlList/' + sqid,
     method: 'get'
   })
 }

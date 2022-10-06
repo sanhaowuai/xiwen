@@ -15,9 +15,90 @@ public class Shjlb {
     private String lcid;
     private String sqid;
     private String shzt;
+    private String shztmc;
     private String shyj;
     private String shnr;
+    private String shr;
     private String xyjdid;
+    private String dqjdid;
+    private String lcjdid;
+    private String lcpx;
+    private String lcjdmc;
+    private String lcshjs;
+    private String czsj;
+    private String yhxm;
+
+    public String getYhxm() {
+        return yhxm;
+    }
+
+    public void setYhxm(String yhxm) {
+        this.yhxm = yhxm;
+    }
+
+    public String getShztmc() {
+        return shztmc;
+    }
+
+    public void setShztmc(String shztmc) {
+        this.shztmc = shztmc;
+    }
+
+    public String getCzsj() {
+        return czsj;
+    }
+
+    public void setCzsj(String czsj) {
+        this.czsj = czsj;
+    }
+
+    public String getShr() {
+        return shr;
+    }
+
+    public void setShr(String shr) {
+        this.shr = shr;
+    }
+
+    public String getDqjdid() {
+        return dqjdid;
+    }
+
+    public void setDqjdid(String dqjdid) {
+        this.dqjdid = dqjdid;
+    }
+
+    public String getLcjdid() {
+        return lcjdid;
+    }
+
+    public void setLcjdid(String lcjdid) {
+        this.lcjdid = lcjdid;
+    }
+
+    public String getLcpx() {
+        return lcpx;
+    }
+
+    public void setLcpx(String lcpx) {
+        this.lcpx = lcpx;
+    }
+
+    public String getLcjdmc() {
+        return lcjdmc;
+    }
+
+    public void setLcjdmc(String lcjdmc) {
+        this.lcjdmc = lcjdmc;
+    }
+
+    public String getLcshjs() {
+        return lcshjs;
+    }
+
+    public void setLcshjs(String lcshjs) {
+        this.lcshjs = lcshjs;
+    }
 
     public String getId() {
         return id;

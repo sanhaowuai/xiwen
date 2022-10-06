@@ -98,11 +98,57 @@
          left join sys_user u on sjfb.sqr = u.user_id
          left join (select * from sys_dict_data where dict_type = 'workload_khxlx') dictb on dictb.dict_value = sjfb.sqlx
          left join (select * from sys_dict_data where dict_type = 'flow_status') dicta on dicta.dict_value = sjfb.shzt
-        where sjfb.isdel=0 and find_in_set(sjfb.user_id,shr) <![CDATA[ > ]]> 0
+        where sjfb.isdel=0 and find_in_set(#{yhid},sjfb.shr) <![CDATA[ > ]]> 0
             <if test="sqr != null  and sqr != ''"> and sjfb.sqr = #{sqr}</if>
             <if test="sqlx != null  and sqlx != ''"> and sjfb.sqlx = #{sqlx}</if>
             <if test="ksxid != null  and ksxid != ''"> and sjfb.ksxid = #{ksxid}</if>
             <if test="gzjs != null  and gzjs != ''"> and sjfb.gzjs like concat('%', #{gzjs}, '%')</if>
+        order by sjfb.createtime desc
+    </select>
+    <select id="selectSbyshglList" parameterType="com.xiwen.workload.domain.Sbgl" resultType="com.xiwen.workload.domain.Sbgl">
+        select sjfb.id, sjfb.verss, sjfb.isdel, sjfb.createtime, sjfb.createuse,
+            sjfb.updatetime, sjfb.updateuse,DATE_FORMAT(sjfb.createtime,'%Y-%m-%d') sbsj,
+            sjfb.gzkssj, sjfb.gzjssj, sjfb.gzsc, sjfb.gzjs,sjfb.sqfz,
+            sjfb.shzt,dicta.dict_label shztmc,
+            sjfb.sqlx,dictb.dict_label sqlxmc,
+            sjfb.sqr,u.nick_name sqrxm,
+            sjfb.ksxid,khxb.khxmc,
+            sjfb.lcid,ywlcb.lcmc,ywlcb.sfkbh
+         from wf_sqb_sjfb sjfb
+         left join wf_khxb khxb on khxb.id = sjfb.ksxid
+         left join wf_ywlcb ywlcb on ywlcb.id = khxb.lcid
+         left join sys_user u on sjfb.sqr = u.user_id
+         left join (select * from sys_dict_data where dict_type = 'workload_khxlx') dictb on dictb.dict_value = sjfb.sqlx
+         left join (select * from sys_dict_data where dict_type = 'flow_status') dicta on dicta.dict_value = sjfb.shzt
+        where sjfb.isdel=0
+        and sjfb.id in ( select sqid from wf_sqb_shjlb shjlb LEFT JOIN wf_sqb_sjfb sjfb ON sjfb.id = shjlb.sqid
+        where shjlb.shr=#{yhid} and sjfb.sqr != #{yhid} )
+            <if test="sqr != null  and sqr != ''"> and sjfb.sqr = #{sqr}</if>
+            <if test="sqlx != null  and sqlx != ''"> and sjfb.sqlx = #{sqlx}</if>
+            <if test="ksxid != null  and ksxid != ''"> and sjfb.ksxid = #{ksxid}</if>
+            <if test="gzjs != null  and gzjs != ''"> and sjfb.gzjs like concat('%', #{gzjs}, '%')</if>
+        order by sjfb.createtime desc
+    </select>
+    <select id="selectShSbglList" parameterType="com.xiwen.workload.domain.Sbgl" resultType="com.xiwen.workload.domain.Sbgl">
+        select sjfb.id, sjfb.verss, sjfb.isdel, sjfb.createtime, sjfb.createuse,
+        sjfb.updatetime, sjfb.updateuse,DATE_FORMAT(sjfb.createtime,'%Y-%m-%d') sbsj,
+        sjfb.gzkssj, sjfb.gzjssj, sjfb.gzsc, sjfb.gzjs,sjfb.sqfz,
+        sjfb.shzt,dicta.dict_label shztmc,
+        sjfb.sqlx,dictb.dict_label sqlxmc,
+        sjfb.sqr,u.nick_name sqrxm,
+        sjfb.ksxid,khxb.khxmc,
+        sjfb.lcid,ywlcb.lcmc
+        from wf_sqb_sjfb sjfb
+        left join wf_khxb khxb on khxb.id = sjfb.ksxid
+        left join wf_ywlcb ywlcb on ywlcb.id = khxb.lcid
+        left join sys_user u on sjfb.sqr = u.user_id
+        left join (select * from sys_dict_data where dict_type = 'workload_khxlx') dictb on dictb.dict_value = sjfb.sqlx
+        left join (select * from sys_dict_data where dict_type = 'flow_status') dicta on dicta.dict_value = sjfb.shzt
+        where sjfb.isdel=0
+        <if test="sqr != null  and sqr != ''"> and sjfb.sqr = #{sqr}</if>
+        <if test="sqlx != null  and sqlx != ''"> and sjfb.sqlx = #{sqlx}</if>
+        <if test="ksxid != null  and ksxid != ''"> and sjfb.ksxid = #{ksxid}</if>
+        <if test="gzjs != null  and gzjs != ''"> and sjfb.gzjs like concat('%', #{gzjs}, '%')</if>
         order by sjfb.createtime desc
     </select>
     <select id="selectSbglList" parameterType="com.xiwen.workload.domain.Sbgl" resultType="com.xiwen.workload.domain.Sbgl">
@@ -126,6 +172,35 @@
         <if test="ksxid != null  and ksxid != ''"> and sjfb.ksxid = #{ksxid}</if>
         <if test="gzjs != null  and gzjs != ''"> and sjfb.gzjs like concat('%', #{gzjs}, '%')</if>
         order by sjfb.createtime desc
+    </select>
+
+    <select id="getShdqjd" parameterType="String" resultType="com.xiwen.workload.domain.Lcgl">
+        select lcjdb.id,lcjdb.lcid,lcjdb.jdmc,lcjdb.shjs,ifnull(lcjdb.px,99) px,
+            shjlb.id shjlid
+        from (select wf_sqb_shjlb.* from wf_sqb_shjlb where sqid=#{sqid} order by updatetime desc limit 0,1) shjlb
+        left join wf_ywlcjdb lcjdb on lcjdb.lcid = shjlb.lcid and shjlb.dqjdid = lcjdb.id
+    </select>
+
+    <select id="getShjlList" parameterType="String" resultType="com.xiwen.workload.domain.Shjlb">
+        select shjlb.*, dicta.dict_label shztmc,
+        case when shjlb.shr is null or shjlb.shr='' then u.nick_name
+	    else u1.nick_name end yhxm,
+        DATE_FORMAT(shjlb.updatetime,'%Y-%m-%d') czsj
+        from wf_sqb_shjlb shjlb
+        left join (select * from sys_dict_data where dict_type='flow_status') dicta on dicta.dict_value=shjlb.shzt
+        left join wf_sqb_sjfb sjfb on shjlb.sqid=sjfb.id
+        left join sys_user u on sjfb.sqr=u.user_id
+        left join sys_user u1 on shjlb.shr=u1.user_id
+        where sqid=#{sqid} order by updatetime desc
+    </select>
+
+    <select id="getLcjdxx" parameterType="String" resultType="com.xiwen.workload.domain.Lcgl">
+        select lcjdb.id,lcjdb.px,lcjdb.lcid,lcjdb.jdmc,lcjdb.shjs,Ifnull(role.role_name,'申报人') jsmc
+        from wf_sqb_sjfb sqb
+        left join wf_ywlcjdb lcjdb  on sqb.lcid = lcjdb.lcid
+        left join sys_role role on role.role_id=lcjdb.shjs
+        where sqb.id=#{sqid}
+        order by lcjdb.px
     </select>
 
     <select id="selectSbglById" parameterType="String" resultMap="SbglResult">
@@ -180,20 +255,79 @@
     <update id="updateSbglShlc" parameterType="com.xiwen.workload.domain.Sbgl">
         update wf_sqb_sjfb set shr=#{shr} where id=#{id}
     </update>
+    <update id="updateShSbgl" parameterType="com.xiwen.workload.domain.Sbgl">
+        update wf_sqb_sjfb set shzt=#{shzt},shr=#{shr},verss=verss+1 where id=#{id} and verss=#{verss}
+    </update>
 
     <insert id="insertShjlb" parameterType="com.xiwen.workload.domain.Shjlb">
         insert into wf_sqb_shjlb(id,verss,isdel,createtime,updatetime,lcid,sqid,shzt,shyj,shnr,xyjdid)
         values(#{id},1,0,sysdate(),sysdate(),#{lcid},#{sqid},#{shzt},#{shyj},#{shnr},#{xyjdid})
     </insert>
 
-    <!--查询流程节点信息-->
     <select id="getLcShr" parameterType="String" resultType="String">
         select group_concat(user_id) from sys_user where user_id in (select user_id from sys_user_role where role_id=#{roleid})
     </select>
+    <select id="getSjshjd" parameterType="String" resultType="com.xiwen.workload.domain.Lcgl">
+       select lcjdb.*,shjlb.id shjlid from
+        (select wf_sqb_shjlb.* from wf_sqb_shjlb where sqid=#{sqid} order by updatetime desc limit 0,1) shjlb
+        left join wf_ywlcjdb lcjdb on lcjdb.lcid = shjlb.lcid and shjlb.dqjdid = lcjdb.id
+    </select>
+    <select id="getLcxxBySqid" parameterType="String" resultType="com.xiwen.workload.domain.Lcgl">
+       select lcb.* from wf_sqb_sjfb sqb
+        left join wf_ywlcb lcb on sqb.lcid=lcb.id
+       where sqb.id=#{sqid}
+    </select>
+
+
+
+
     <!--查询流程节点信息-->
     <select id="getLcjdbList" parameterType="String" resultType="com.xiwen.workload.domain.Lcgl">
-        select * from wf_ywlcjdb where lcid=#{lcid} order by px;
+        select * from wf_ywlcjdb where lcid=#{lcid} order by px
     </select>
+    <select id="getShLcjdbList" parameterType="String" resultType="com.xiwen.workload.domain.Lcgl">
+        select * from wf_ywlcjdb where lcid=(select lcid from wf_sqb_sjfb where id=#{sqid}) order by px
+    </select>
+    <select id="getZhshjd" parameterType="String" resultType="com.xiwen.workload.domain.Shjlb">
+        select shjlb.*,lcjdb.id lcjdid,lcjdb.px lcpx,lcjdb.jdmc lcjdmc,lcjdb.shjs lcshjs from wf_sqb_shjlb shjlb
+        left join wf_ywlcjdb lcjdb on lcjdb.id=shjlb.xyjdid
+        where sqid=#{sqid}  order by updatetime desc limit 0,1
+    </select>
+    <select id="getSbglById" parameterType="String" resultType="com.xiwen.workload.domain.Sbgl">
+        select id,lcid from wf_sqb_sjfb where id=#{sqid}
+    </select>
+    <select id="getCyrybList" parameterType="String" resultType="com.xiwen.workload.domain.SbCyry">
+        select t.*,jqfszb.jqbs from (
+                select cyrb.sqid,cyrb.yhid,cyrb.df,cyrb.shdf,u.birthday,u.birthday as nl,u.sex,khxb.fzlx
+        from wf_sqb_cyrb cyrb
+        left join sys_user u on cyrb.yhid=u.user_id
+        left join wf_sqb_sjfb sqb on cyrb.sqid = sqb.id
+        left join wf_khxb khxb on khxb.id=sqb.ksxid
+        where sqid=#{sqid}) t
+        left join wf_jqfszb jqfszb on t.nl=jqfszb.nl and t.sex=jqfszb.lx
+    </select>
+    <select id="getKhfsbByYhid" parameterType="String" resultType="com.xiwen.workload.domain.Khfsb">
+        select * from wf_rykhfsb where yhid=#{yhid} and nd = year(CURRENT_DATE)
+    </select>
+    <insert id="insertRyKhfsb" parameterType="com.xiwen.workload.domain.Khfsb">
+        insert into wf_rykhfsb(id,verss,isdel,createtime,createuse,updatetime,updateuse,yhid,nd,zfs)
+                values(#{id},1,0,sysdate(),#{createuse},sysdate(),#{createuse},#{yhid},year(CURRENT_DATE),0)
+    </insert>
+    <insert id="insertRyKhfsxqb" parameterType="com.xiwen.workload.domain.Khfsxqb">
+        insert into wf_rykhfsxqb(id,verss,isdel,createtime,createuse,updatetime,updateuse,rykhfsbid,fslx,fs,ywid,bz)
+            values(#{id},1,0,sysdate(),#{createuse},sysdate(),#{createuse},#{rykhfsbid},#{fslx},#{fs},#{ywid},#{bz})
+    </insert>
+    <update id="updateRyKhfsb" parameterType="com.xiwen.workload.domain.Khfsb">
+        update wf_rykhfsb set updatetime=sysdate(),updateuse=#{createuse},zfs=#{zfs} where id=#{id}
+    </update>
+
+
+
+
+
+
+
+
 
     <delete id="deleteSbglById" parameterType="String">
         delete from wf_sqb_sjfb where id = #{id}

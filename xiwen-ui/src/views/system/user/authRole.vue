@@ -4,7 +4,7 @@
     <el-form ref="form" :model="form" label-width="80px">
       <el-row>
         <el-col :span="8" :offset="2">
-          <el-form-item label="用户昵称" prop="nickName">
+          <el-form-item label="用户姓名" prop="nickName">
             <el-input v-model="form.nickName" disabled />
           </el-form-item>
         </el-col>
@@ -33,7 +33,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination v-show="total>0" :total="total" :page.sync="pageNum" :limit.sync="pageSize" />
 
     <el-form label-width="100px">

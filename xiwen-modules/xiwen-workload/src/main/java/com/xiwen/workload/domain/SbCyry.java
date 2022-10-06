@@ -1,5 +1,7 @@
 package com.xiwen.workload.domain;
 
+import java.math.BigDecimal;
+
 /**
  * @BelongsProject: xiwen
  * @BelongsPackage: com.xiwen.workload.domain
@@ -21,6 +23,33 @@ public class SbCyry {
     private String gznr;
     private String bmmc;
     private String shdf;
+    private String fzlx;
+    private String sex;
+    private String jqbs;
+
+    public String getJqbs() {
+        return jqbs;
+    }
+
+    public void setJqbs(String jqbs) {
+        this.jqbs = jqbs;
+    }
+
+    public String getFzlx() {
+        return fzlx;
+    }
+
+    public void setFzlx(String fzlx) {
+        this.fzlx = fzlx;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
 
     public String getShdf() {
         return shdf;

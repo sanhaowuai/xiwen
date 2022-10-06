@@ -1,6 +1,8 @@
 package com.xiwen.workload.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.xiwen.workload.domain.Khfsb;
 import com.xiwen.workload.domain.Khfsxqb;
 
@@ -41,6 +43,7 @@ public interface KhfsbMapper
     public int insertKhfsbTe(Khfsb khfsb);
     public void insertKhfsbXq(Khfsxqb khfsxqb);
     public void updateKhfsbXq(Khfsxqb khfsxqb);
+    public Khfsxqb getKsfsbByYhidAndNd(Map<String,String> paramMap);
 
     /**
      * 修改人员考核分数

@@ -56,7 +56,7 @@
       :default-expand-all="isExpandAll"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column label="名称" align="left" prop="khxmc"/>
+      <el-table-column label="名称" align="left" prop="khxmc" show-overflow-tooltip/>
       <el-table-column label="类型" align="center" prop="sjflx" >
         <template slot-scope="scope">
           <dict-tag :options="dict.type.workload_khxlx" :value="scope.row.sjflx"/>

@@ -29,6 +29,46 @@ public class Khfsxqb extends BaseEntity
     private String updatetimeg;
     private String createtimeg;
     private BigDecimal zfs;
+    private String yhxm;
+    private String bmmc;
+    private String maxfs;
+    private String minfs;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getYhxm() {
+        return yhxm;
+    }
+
+    public void setYhxm(String yhxm) {
+        this.yhxm = yhxm;
+    }
+
+    public String getBmmc() {
+        return bmmc;
+    }
+
+    public void setBmmc(String bmmc) {
+        this.bmmc = bmmc;
+    }
+
+    public String getMaxfs() {
+        return maxfs;
+    }
+
+    public void setMaxfs(String maxfs) {
+        this.maxfs = maxfs;
+    }
+
+    public String getMinfs() {
+        return minfs;
+    }
+
+    public void setMinfs(String minfs) {
+        this.minfs = minfs;
+    }
 
     /** 乐观锁 */
     @Excel(name = "乐观锁")

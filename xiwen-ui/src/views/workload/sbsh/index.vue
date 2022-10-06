@@ -26,13 +26,21 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-        <el-button type="primary" plain icon="el-icon-s-operation" size="mini" @click="handleAdd" v-hasPermi="['workload:sbsh:add']"
+        <el-button type="primary" plain icon="el-icon-s-operation" size="mini"
+           :disabled="multiple" @click="handleUpdatePl" v-hasPermi="['workload:sbsh:add']"
         >批量审核</el-button>
       </el-form-item>
     </el-form>
 
+
+    <template>
+      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+        <el-tab-pane label="待审核" name="dsh"></el-tab-pane>
+        <el-tab-pane label="已审核" name="ysh"></el-tab-pane>
+      </el-tabs>
+    </template>
     <el-table v-loading="loading" :data="sbglList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" :selectable="checkedSelectRow"/>
+      <el-table-column v-if="sfxsdxan === '1'" type="selection" width="55" align="center" :selectable="checkedSelectRow"/>
       <el-table-column label="申报时间" align="center" prop="sbsj" width="97">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.sbsj, '{y}-{m}-{d}') }}</span>
@@ -48,19 +56,13 @@
       <el-table-column label="审核状态" align="center" prop="shztmc" width="100" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.shzt == '0'"
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['workload:sbsh:edit']"
+          <el-button v-if="sfxsdxan == '1'" size="mini" type="text"
+            icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['workload:sbsh:edit']"
           >审核</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-search"
-            @click="handleView(scope.row)"
-            v-hasPermi="['workload:sbsh:remove']"
+          <el-button size="mini" type="text" icon="el-icon-s-operation" @click="lcck(scope.row)"
+          >流程</el-button>
+          <el-button size="mini" type="text" icon="el-icon-search"
+            @click="handleView(scope.row)" v-hasPermi="['workload:sbsh:remove']"
           >查看</el-button>
         </template>
       </el-table-column>
@@ -116,7 +118,7 @@
     </el-dialog>
     <!-- 添加或修改申报管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="720px" append-to-body :close-on-press-escape="false" :close-on-click-modal="false">
-      <el-form ref="form" :model="form" :rules="rules" :inline="true" label-width="100px" style="padding: 5px 15px;">
+      <el-form ref="form" :model="form"  :inline="true" label-width="100px" style="padding: 5px 15px;">
         <el-form-item label="类型" prop="sqlx" class="el-form-item-margin">
           <el-select v-model="form.sqlx" placeholder="请选择考核类型" style="width: 200px" disabled @change="getCyryTreeselect()">
             <el-option
@@ -199,8 +201,8 @@
         <el-button @click="cancel">关 闭</el-button>
       </div>
     </el-dialog>
-    <!-- 查看 -->
-    <el-dialog title="查看详情" :visible.sync="openXq" width="720px" append-to-body :close-on-press-escape="false" :close-on-click-modal="false">
+    <!-- 查看详情 -->
+    <el-dialog title="查看详情" :visible.sync="openXq" width="720px" append-to-body >
       <el-divider content-position="center"></el-divider>
       <div>
         <div style="margin-left: 67px;margin-bottom: 15px;">
@@ -222,12 +224,14 @@
               <tr>
                 <td style="width:80px;line-height: 30px;">姓名</td>
                 <td style="width:110px;line-height: 30px;">得分</td>
+                <td style="width:110px">审核得分</td>
                 <td style="width:390px;line-height: 30px;">工作分配</td>
               </tr>
               <template v-for="(item, index) in cyryList">
                 <tr>
                   <td style="line-height: 30px;">{{item.yhxm}}</td>
                   <td style="line-height: 30px;">{{item.df}}</td>
+                  <td style="line-height: 30px;">{{item.shdf}}</td>
                   <td style="text-align: left;line-height: 30px;" :title="item.gznr">{{item.gznr}}</td>
                 </tr>
               </template>
@@ -240,13 +244,59 @@
         </div>
       </div>
     </el-dialog>
-
+    <!-- 查看流程 -->
+    <el-dialog title="流程详情" :visible.sync="openLcXq" width="720px" append-to-body >
+      <el-divider content-position="center"></el-divider>
+      <div>
+        <div style="margin-left: 20px;margin-right: 20px;margin-bottom: 20px;margin-top: 25px;">
+          <el-steps  :active="lcjdjd" finish-status="success">
+            <el-step v-for="itemlcjd in lcjdList" :title="itemlcjd.jsmc"></el-step>
+          </el-steps>
+        </div>
+        <div style="margin-left: 20px;margin-right: 20px;margin-bottom: 20px;margin-top: 25px;">
+          <div class="block">
+            <el-timeline>
+              <el-timeline-item v-for="itemlcsh in lcshjlList" :timestamp="itemlcsh.czsj" placement="top">
+                <el-card>
+                  <h4>{{itemlcsh.yhxm}}  {{itemlcsh.shztmc}}</h4>
+                  <p>{{itemlcsh.shyj}}</p>
+                </el-card>
+              </el-timeline-item>
+            </el-timeline>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+    <!-- 批量审核 -->
+    <el-dialog title="批量审核" :visible.sync="openPlsh" width="720px" append-to-body >
+      <el-divider content-position="center"></el-divider>
+      <div>
+        <div style="margin-left: 20px;margin-right: 20px;margin-bottom: 20px;margin-top: 25px;">
+          <el-steps  :active="lcjdjd" finish-status="success">
+            <el-step v-for="itemlcjd in lcjdList" :title="itemlcjd.jsmc"></el-step>
+          </el-steps>
+        </div>
+        <div style="margin-left: 20px;margin-right: 20px;margin-bottom: 20px;margin-top: 25px;">
+          <div class="block">
+            <el-timeline>
+              <el-timeline-item v-for="itemlcsh in lcshjlList" :timestamp="itemlcsh.czsj" placement="top">
+                <el-card>
+                  <h4>{{itemlcsh.yhxm}}  {{itemlcsh.shztmc}}</h4>
+                  <p>{{itemlcsh.shyj}}</p>
+                </el-card>
+              </el-timeline-item>
+            </el-timeline>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import { listSbshgl, getSbgl, delSbgl, addSbgl, updateSbsh,
-    queryCyryList,getUserByDlr,querySbcyryList,getWfConfig } from "@/api/workload/sbsh";
+    queryCyryList,getUserByDlr,querySbcyryList,getWfConfig,
+    getShjlList, getShdqjd, getLcjdxx} from "@/api/workload/sbsh";
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import { listKhxglZs, getKhxgl } from "@/api/workload/khxgl";
@@ -294,6 +344,12 @@
         cyryTableList:[],
         // 参与人员
         cyryList: [],
+        // 当前节点序号
+        lcjdjd: '',
+        // 流程节点信息
+        lcjdList: [],
+        // 审核记录详情
+        lcshjlList: [],
         // 考核项管理树选项
         khxglOptions: [],
         // 考核项管理树选项 参与人员表单
@@ -306,6 +362,8 @@
         total: 0,
         // 唯一标识符
         UID: "yhid",
+        activeName: "dsh",
+        sfxsdxan: "1",
         totalCyry: 0,
         // 申报管理表格数据
         sbglList: [],
@@ -318,6 +376,10 @@
         open: false,
         // 是否显示弹出层 查看
         openXq: false,
+        // 是否流程弹出层
+        openLcXq: false,
+        // 是否批量审核弹出层
+        openPlsh: false,
         // 查询参数
         queryCyryParams: {
           pageNum: 1,
@@ -331,6 +393,7 @@
           pageSize: 10,
           sqr: null,
           sqlx: null,
+          lblx: 'dsh',
           ksxid: null,
           gzjs: null,
         },
@@ -355,6 +418,17 @@
       this.getWfConfig();
     },
     methods: {
+      //切换标签页
+      handleClick(tab, event) {
+        if(this.activeName === 'ysh'){
+          this.sfxsdxan = '0'
+        }else{
+          this.sfxsdxan = '1'
+        }
+        this.queryParams.pageNum = 1;
+        this.queryParams.lblx = this.activeName;
+        this.getList();
+      },
       getWfConfig(){
         getWfConfig('WF_SB_TSXZ').then(res => {
           this.sbxzts = parseInt(res.data.sfky)
@@ -380,11 +454,12 @@
       },
       //判断主列表的多选按钮是否禁用
       checkedSelectRow(row,index){
-        if (row.shzt == '0') {
-          return true //不可勾选
-        } else {
-          return false; //可勾选
-        }
+        return true; //可勾选
+        // if (row.shzt == '0') {
+        //   return true //不可勾选
+        // } else {
+        //   return false; //可勾选
+        // }
       },
       //表单中考核项改变时触发
       checkedKhxdyfs(value,state){
@@ -726,7 +801,32 @@
           this.openXq = true;
         });
       },
-      /** 修改按钮操作 */
+      /** 流程查看 */
+      async lcck(row) {
+        getLcjdxx(row.id).then(res => {
+          this.lcjdList = res.data;
+            getShdqjd(row.id).then(res1 => {
+              let dqjdpx = res1.data.px
+              if(dqjdpx === 99){
+                this.lcjdjd = this.lcjdList.length
+              }else{
+                this.lcjdjd = dqjdpx
+              }
+              getShjlList(row.id).then(res2 => {
+                this.lcshjlList = res2.data;
+                this.openLcXq = true
+              })
+            })
+        })
+      },
+
+      //批量审核弹出
+      handleUpdatePl(){
+        this.openPlsh = true;
+      },
+
+
+      /** 审核按钮操作 */
       async handleUpdate(row) {
         this.reset();
         const id = row.id
@@ -739,6 +839,7 @@
             res.data.forEach(t => {
               let tempRow = JSON.parse(JSON.stringify(t))
               tempRow.df = parseFloat(t.df)
+              tempRow.shdf = parseFloat(t.shdf)
               this.cyryList.push(tempRow)
             })
             this.cyryList = res.data
@@ -773,7 +874,7 @@
                  throw SyntaxError();
                  return
                }{
-                 if(tempZfz < tempYsfz){
+                 if(tempSumFs < tempZfz){
                    this.$modal.confirm('当前审核分数总和（' + tempZfz + '）小于预设分值（' + tempYsfz + '），是否继续操作？').then(function() {
                      self.updDataSer(sftj)
                    }).catch(() => {});
@@ -795,16 +896,16 @@
         this.form.shzt = sftj
         if (this.form.id != null) {
           updateSbsh(this.form).then(response => {
-            this.$modal.msgSuccess(response.data.msg);
-            this.open = false;
-            this.getList();
+            if(response.data.code !== '200'){
+              this.$modal.msgError(response.data.msg);
+            }else{
+              this.$modal.msgSuccess(response.data.msg);
+              this.open = false;
+              this.getList();
+            }
           });
-        } else {
-          updateSbsh(this.form).then(response => {
-            this.$modal.msgSuccess(response.data.msg);
-            this.open = false;
-            this.getList();
-          });
+        }else{
+          this.$modal.msgError("当前数据错误，请稍后重试！");
         }
       },
 
@@ -849,5 +950,8 @@
   .el-divider--horizontal {
     margin-bottom: 10px;
     margin-top: 10px;
+  }
+  .el-card__body {
+    padding: 6px 6px 6px 12px;
   }
 </style>

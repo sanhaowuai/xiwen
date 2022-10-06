@@ -20,7 +20,7 @@
     </resultMap>
 
     <sql id="selectKhfsxqbVo">
-        select id, verss, isdel, createtime, createuse, updatetime, updateuse, rykhfsbid, fslx, fs, ywid, bz from wf_rykhfsxqb
+        select id, verss, isdel, createtime, createuse, updatetime, updateuse, rykhfsbid, fslx, fs, ywid, bz,zfz from wf_rykhfsxqb
     </sql>
 
     <select id="selectKhfsxqbList" parameterType="Khfsxqb" resultMap="KhfsxqbResult">
@@ -35,8 +35,11 @@
     </select>
 
     <select id="selectKhfsxqbById" parameterType="String" resultMap="KhfsxqbResult">
-        <include refid="selectKhfsxqbVo"/>
+        select * from wf_rykhfsxqb
         where id = #{id}
+    </select>
+    <select id="getUserByYhidAndYhxm" parameterType="java.util.HashMap" resultType="String">
+        select user_id from sys_user where user_name=#{yhid} and nick_name=#{yhxm}
     </select>
 
     <insert id="insertKhfsxqb" parameterType="Khfsxqb">

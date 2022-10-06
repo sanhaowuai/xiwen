@@ -3,6 +3,8 @@ package com.xiwen.system.api.domain;
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.xiwen.common.core.annotation.Excel;
@@ -33,7 +35,7 @@ public class SysUser extends BaseEntity
     @Excel(name = "登录名称")
     private String userName;
 
-    /** 用户昵称 */
+    /** 用户姓名 */
     @Excel(name = "用户名称")
     private String nickName;
 
@@ -54,6 +56,10 @@ public class SysUser extends BaseEntity
 
     /** 密码 */
     private String password;
+
+    /** 密码 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date birthday;
 
     /** 帐号状态（0正常 1停用） */
     @Excel(name = "帐号状态", readConverterExp = "0=正常,1=停用")
@@ -94,6 +100,14 @@ public class SysUser extends BaseEntity
 
     }
 
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
     public SysUser(Long userId)
     {
         this.userId = userId;
@@ -129,8 +143,8 @@ public class SysUser extends BaseEntity
         this.deptId = deptId;
     }
 
-    @Xss(message = "用户昵称不能包含脚本字符")
-    @Size(min = 0, max = 30, message = "用户昵称长度不能超过30个字符")
+    @Xss(message = "用户姓名不能包含脚本字符")
+    @Size(min = 0, max = 30, message = "用户姓名长度不能超过30个字符")
     public String getNickName()
     {
         return nickName;

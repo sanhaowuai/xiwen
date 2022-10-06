@@ -76,7 +76,6 @@ public class KhxglController extends BaseController
     /**
      * 获取考核项管理详细信息
      */
-    @RequiresPermissions("workload:khxgl:query")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id)
     {

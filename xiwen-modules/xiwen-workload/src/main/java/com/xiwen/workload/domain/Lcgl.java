@@ -25,7 +25,25 @@ public class Lcgl extends BaseEntity {
     private String lcid;
     private String jdmc;
     private String shjs;
+    private String shjlid;
+    private String jsmc;
     private List<Lcgl> jdList;
+
+    public String getJsmc() {
+        return jsmc;
+    }
+
+    public void setJsmc(String jsmc) {
+        this.jsmc = jsmc;
+    }
+
+    public String getShjlid() {
+        return shjlid;
+    }
+
+    public void setShjlid(String shjlid) {
+        this.shjlid = shjlid;
+    }
 
     public String getLcmc() {
         return lcmc;
