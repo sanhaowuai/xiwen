@@ -28,7 +28,7 @@
       </table>
     </div>
 
-    <el-table v-loading="loading" :data="khfsbList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="khfsbList">
 
 
 

@@ -41,7 +41,6 @@ public class SysDeptController extends BaseController
     /**
      * 获取部门列表
      */
-    @RequiresPermissions("system:dept:list")
     @GetMapping("/list")
     public AjaxResult list(SysDept dept)
     {
