@@ -27,6 +27,7 @@ public interface SbglMapper
      * @return 申报管理集合
      */
     public List<Sbgl> selectSbglList(Sbgl sbgl);
+    public List<Sbgl> listSbglCysb(Sbgl sbgl);
     public List<Sbgl> selectShSbglList(Sbgl sbgl);
     public List<Lcgl> getLcjdxx(String sqid);
     public List<Shjlb> getShjlList(String sqid);
@@ -52,6 +53,7 @@ public interface SbglMapper
     public int insertRyKhfsb(Khfsb khfsb);
     public int insertRyKhfsxqb(Khfsxqb khfsxqb);
     public int updateRyKhfsb(Khfsb khfsb);
+    public int updateSbCyryShdf(SbCyry cyryb);
 
     /**
      * 修改申报管理

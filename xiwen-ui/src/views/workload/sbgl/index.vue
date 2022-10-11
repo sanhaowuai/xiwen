@@ -95,7 +95,9 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['workload:sbgl:remove']"
           >删除</el-button>
-          <el-button
+          <el-button v-if="scope.row.shzt != '0'" size="mini" type="text" icon="el-icon-s-operation" @click="lcck(scope.row)"
+          >流程</el-button>
+          <el-button v-if="scope.row.shzt != '0'"
             size="mini"
             type="text"
             icon="el-icon-search"
@@ -170,6 +172,7 @@
 
         <el-form-item label="考核项" prop="ksxid" class="el-form-item-margin">
           <treeselect style="width: 200px" v-model="form.ksxid" :options="khxglOptionsCyry" :clearable="false"
+                      :disable-branch-nodes="true"
                      @input="checkedKhxdyfs" :normalizer="normalizerCyry" placeholder="请选择考核项" />
         </el-form-item>
         <el-form-item label="开始时间" prop="gzkssj" class="el-form-item-margin">
@@ -278,12 +281,38 @@
       </div>
     </el-dialog>
 
+
+    <!-- 查看流程 -->
+    <el-dialog title="流程详情" :visible.sync="openLcXq" width="720px" append-to-body >
+      <el-divider content-position="center"></el-divider>
+      <div>
+        <div style="margin-left: 20px;margin-right: 20px;margin-bottom: 20px;margin-top: 25px;">
+          <el-steps  :active="lcjdjd" finish-status="success">
+            <el-step v-for="itemlcjd in lcjdList" :title="itemlcjd.jsmc"></el-step>
+          </el-steps>
+        </div>
+        <div style="margin-left: 20px;margin-right: 20px;margin-bottom: 20px;margin-top: 25px;">
+          <div class="block">
+            <el-timeline>
+              <el-timeline-item v-for="itemlcsh in lcshjlList" :timestamp="itemlcsh.czsj" placement="top">
+                <el-card>
+                  <h4>{{itemlcsh.yhxm}}  {{itemlcsh.shztmc}}</h4>
+                  <p>{{itemlcsh.shyj}}</p>
+                </el-card>
+              </el-timeline-item>
+            </el-timeline>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
   import { listSbgl, getSbgl, delSbgl, addSbgl, updateSbgl,
     queryCyryList,getUserByDlr,querySbcyryList,getWfConfig } from "@/api/workload/sbgl";
+  import { getLcjdxx,getShdqjd,getShjlList } from "@/api/workload/sbsh";
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import { listKhxglZs, getKhxgl } from "@/api/workload/khxgl";
@@ -346,6 +375,10 @@
         totalCyry: 0,
         // 申报管理表格数据
         sbglList: [],
+        lcjdList: [],
+        lcshjlList: [],
+        lcjdjd: 0,
+        openLcXq: false,
         // 弹出层标题
         title: "",
         // 限制天数
@@ -392,6 +425,26 @@
       this.getWfConfig();
     },
     methods: {
+
+      /** 流程查看 */
+      async lcck(row) {
+        getLcjdxx(row.id).then(res => {
+          this.lcjdList = res.data;
+          getShdqjd(row.id).then(res1 => {
+            let dqjdpx = res1.data.px
+            if(dqjdpx === 99){
+              this.lcjdjd = this.lcjdList.length
+            }else{
+              this.lcjdjd = dqjdpx
+            }
+            getShjlList(row.id).then(res2 => {
+              this.lcshjlList = res2.data;
+              this.openLcXq = true
+            })
+          })
+        })
+      },
+
       getWfConfig(){
         getWfConfig('WF_SB_TSXZ').then(res => {
           this.sbxzts = parseInt(res.data.sfky)

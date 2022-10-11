@@ -1,5 +1,7 @@
 package com.xiwen.workload.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -42,7 +44,19 @@ public class SbglController extends BaseController
     public TableDataInfo list(Sbgl sbgl)
     {
         startPage();
+        sbgl.setSqr(SecurityUtils.getUserId()+"");
         List<Sbgl> list = sbglService.selectSbglList(sbgl);
+        return getDataTable(list);
+    }
+    /**
+     * 查询参与申报
+     */
+    @GetMapping("/listSbglCysb")
+    public TableDataInfo listSbglCysb(Sbgl sbgl)
+    {
+        startPage();
+        sbgl.setSqr(SecurityUtils.getUserId()+"");
+        List<Sbgl> list = sbglService.listSbglCysb(sbgl);
         return getDataTable(list);
     }
     /**
@@ -109,7 +123,10 @@ public class SbglController extends BaseController
         Lcgl lcgl = sbglService.getShdqjd(sqid);
         if(lcgl == null ){
             lcgl = new Lcgl();
-            lcgl.setPx(0);
+            lcgl.setPx(1);
+        }
+        if(StringUtils.isBlank(lcgl.getId()) && "1".equals(lcgl.getShzt())){
+            lcgl.setPx(1);
         }
         return AjaxResult.success(lcgl);
     }
@@ -185,8 +202,36 @@ public class SbglController extends BaseController
     {
         sbgl.setCreateuse(SecurityUtils.getUserId()+"");
         sbgl.setUpdateuse(SecurityUtils.getUserId()+"");
-        sbgl.setSqr(SecurityUtils.getUserId()+"");
         Map<String,String> resMap = sbglService.updateSbsh(sbgl);
+        return AjaxResult.success(resMap);
+    }
+    /**
+     * @description:批量审核
+     * @author: cuiqichao
+     * @param: sbgl
+     * @return: com.xiwen.common.core.web.domain.AjaxResult
+    **/
+    @PutMapping("/updateSbshPl")
+    public AjaxResult updateSbshPl(@RequestBody Sbgl sbgl)
+    {
+        sbgl.setCreateuse(SecurityUtils.getUserId()+"");
+        sbgl.setUpdateuse(SecurityUtils.getUserId()+"");
+        Map<String,String> resMap = new HashMap<>();
+        if(sbgl.getIds()!=null && sbgl.getIds().length > 0){
+            for(String id:sbgl.getIds()){
+                sbgl.setId(id);
+                List<SbCyry> cyryTList = sbglService.querySbcyryList(sbgl);
+                for(SbCyry sbCyry:cyryTList){
+                    if(StringUtils.isBlank(sbCyry.getShdf())){
+                        sbCyry.setShdf(sbCyry.getDf());
+                    }
+                }
+                sbgl.setCyryTList(cyryTList);
+                resMap = sbglService.updateSbsh(sbgl);
+            }
+        }else{
+            resMap.put("msg","数据错误！");
+        }
         return AjaxResult.success(resMap);
     }
 

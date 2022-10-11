@@ -69,6 +69,11 @@ public class SbglServiceImpl implements SbglService
         return sbglMapper.selectSbglList(sbgl);
     }
     @Override
+    public List<Sbgl> listSbglCysb(Sbgl sbgl)
+    {
+        return sbglMapper.listSbglCysb(sbgl);
+    }
+    @Override
     public Lcgl getShdqjd(String sqid)
     {
         return sbglMapper.getShdqjd(sqid);
@@ -196,7 +201,7 @@ public class SbglServiceImpl implements SbglService
     public Map<String,String> updateSbsh(Sbgl sbgl)
     {
         Map<String,String> resMap = new HashMap<>();
-        Lcgl lcgl = sbglMapper.getSjshjd(sbgl.getId());
+        Lcgl lcgl = sbglMapper.getLcxxBySqid(sbgl.getId());
         Sbgl shSbgl = sbglMapper.selectSbglById(sbgl.getId());
         Sbgl sqb = new Sbgl();
         sqb.setVerss(shSbgl.getVerss());
@@ -251,7 +256,7 @@ public class SbglServiceImpl implements SbglService
                 int rowCount = sbglMapper.updateShSbgl(sqb);
                 //2.3 如果上一步更新成功，则插入审核记录表
                 if(rowCount > 0){
-                    addShjlb.setShr(sbgl.getCreateuse());
+                    addShjlb.setShr(SecurityUtils.getUserId()+"");
                     addShjlb.setShzt(sbgl.getShzt());
                     sbglMapper.insertShjlb(addShjlb);//插入审核记录表
 
@@ -267,7 +272,7 @@ public class SbglServiceImpl implements SbglService
                 int rowCount = sbglMapper.updateShSbgl(sqb);
                 //2.3 如果上一步更新成功，则插入审核记录表
                 if(rowCount > 0){
-                    addShjlb.setShr(sbgl.getCreateuse());
+                    addShjlb.setShr(SecurityUtils.getUserId()+"");
                     addShjlb.setShzt(sbgl.getShzt());
                     sbglMapper.insertShjlb(addShjlb);//插入审核记录表
                 }
@@ -300,7 +305,7 @@ public class SbglServiceImpl implements SbglService
                     int rowCount = sbglMapper.updateShSbgl(sqb);
                     //2.3 如果上一步更新成功，则插入审核记录表
                     if(rowCount > 0){
-                        addShjlb.setShr(sbgl.getCreateuse());
+                        addShjlb.setShr(SecurityUtils.getUserId()+"");
                         addShjlb.setShzt(sbgl.getShzt());
                         sbglMapper.insertShjlb(addShjlb);//插入审核记录表
                     }
@@ -332,8 +337,10 @@ public class SbglServiceImpl implements SbglService
         List<SbCyry> cyrybList = sbglMapper.getCyrybList(sbgl.getId());
         for(SbCyry cyryb:cyrybList){
             BigDecimal fs = new BigDecimal(cyryb.getShdf());
+            String tempJqbs = "";
             if(sfsyjqf && "1".equals(cyryb.getFzlx())){//判断是否需要加权倍数 并且只有加分的时候需要
                 if(cyryb.getJqbs() != null && !"".equals(cyryb.getJqbs().toString())){ //并且加权倍数不等于空
+                    tempJqbs = cyryb.getJqbs();
                     fs = fs.multiply(new BigDecimal(cyryb.getJqbs()));
                 }
             }
@@ -358,7 +365,11 @@ public class SbglServiceImpl implements SbglService
             khxfsxqb.setFslx(cyryb.getFzlx());
             khxfsxqb.setFs(fs);
             khxfsxqb.setYwid(sbgl.getId());
-            khxfsxqb.setBz("");
+            if(StringUtils.isNotBlank(tempJqbs)){
+                khxfsxqb.setBz("加权倍数：" + tempJqbs);
+            }else{
+                khxfsxqb.setBz("");
+            }
             //插入考核详情表
             sbglMapper.insertRyKhfsxqb(khxfsxqb);
             //修改人员考核表分数
@@ -367,6 +378,8 @@ public class SbglServiceImpl implements SbglService
             }else if("2".equals(cyryb.getFzlx())){//减分
                 rykhfsb.setZfs(rykhfsb.getZfs().subtract(fs));
             }
+            cyryb.setShdf(String.valueOf(fs));
+            sbglMapper.updateSbCyryShdf(cyryb);
             sbglMapper.updateRyKhfsb(rykhfsb);
         }
         return "";

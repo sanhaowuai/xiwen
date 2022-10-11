@@ -31,6 +31,7 @@ public interface SbglService
      * @return 申报管理集合
      */
     public List<Sbgl> selectSbglList(Sbgl sbgl);
+    public List<Sbgl> listSbglCysb(Sbgl sbgl);
     public List<Sbgl> selectShSbglList(Sbgl sbgl);
     public List<Lcgl> getLcjdxx(String sqid);
     public List<Shjlb> getShjlList(String sqid);

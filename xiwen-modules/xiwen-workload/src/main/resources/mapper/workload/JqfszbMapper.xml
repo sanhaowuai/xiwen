@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiwen.workload.mapper.JqfszbMapper">
+
+    <select id="selectJqfszbList" parameterType="com.xiwen.workload.domain.Jqfszb" resultType="com.xiwen.workload.domain.Jqfszb">
+        select id, verss, isdel, createtime, createuse, updatetime, updateuse, lx, nl, jqbs from wf_jqfszb
+        where isdel = 0
+            <if test="lx != null  and lx != ''"> and lx = #{lx}</if>
+    </select>
+
+    <select id="selectJqfszbById" parameterType="String" resultType="com.xiwen.workload.domain.Jqfszb">
+        select id, verss, isdel, createtime, createuse, updatetime, updateuse, lx, nl, jqbs from wf_jqfszb
+        where id = #{id}
+    </select>
+    <select id="queryByLxAndNl" parameterType="com.xiwen.workload.domain.Jqfszb" resultType="int">
+        select count(*) from wf_jqfszb where lx=#{lx} and nl=#{nl} and id!=#{id}
+    </select>
+
+    <insert id="insertJqfszb" parameterType="com.xiwen.workload.domain.Jqfszb">
+        insert into wf_jqfszb (id,verss,isdel,createtime,createuse,updatetime,updateuse,
+            lx,nl,jqbs)
+            values(#{id},1,0,sysdate(),#{createuse},sysdate(),#{updateuse},
+                #{lx},#{nl},#{jqbs})
+    </insert>
+
+    <update id="updateJqfszb" parameterType="com.xiwen.workload.domain.Jqfszb">
+        update wf_jqfszb set  updatetime = sysdate(),
+            updateuse = #{updateuse},lx = #{lx},nl = #{nl},jqbs = #{jqbs}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteJqfszbById" parameterType="String">
+        delete from wf_jqfszb  where id = #{id}
+    </delete>
+
+    <delete id="deleteJqfszbByIds" parameterType="String">
+        delete from wf_jqfszb  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

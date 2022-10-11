@@ -14,24 +14,12 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button type="success" size="mini" @click="downloadFile('1')" >导出</el-button>
+        <span style="font-size: 18px;margin-left: 10px;">暂。。。。。。。</span>
       </el-form-item>
     </el-form>
 
-    <div>
-      <table>
-        <tr >
-          <td>考核分类</td>
-          <template v-for="(val1,index) in headerList">
-            <td v-if="val1.pid === '-1'"></td>
-          </template>
-        </tr>
-      </table>
-    </div>
 
     <el-table v-loading="loading" :data="khfsbList">
-
-
-
       <el-table-column label="考核分类" align="center" prop="yhxm" />
       <el-table-column label="" align="center" prop="bmmc" />
       <el-table-column label="" align="center" prop="nd" />

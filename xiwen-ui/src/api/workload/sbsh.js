@@ -80,10 +80,18 @@ export function getUserByDlr() {
 }
 
 
-// 添加 修改申报管理
+// 审核
 export function updateSbsh(data) {
   return request({
     url: '/workload/sbgl/updateSbsh',
+    method: 'put',
+    data: data
+  })
+}
+// 批量审核
+export function updateSbshPl(data) {
+  return request({
+    url: '/workload/sbgl/updateSbshPl',
     method: 'put',
     data: data
   })

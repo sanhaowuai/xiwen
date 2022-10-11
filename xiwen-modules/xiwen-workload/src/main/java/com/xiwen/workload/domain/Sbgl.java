@@ -53,6 +53,24 @@ public class Sbgl extends BaseEntity
     private String shnr;
     private String lblx;
     private String yhid;
+    private String bhlx;
+    private String[] ids;
+
+    public String[] getIds() {
+        return ids;
+    }
+
+    public void setIds(String[] ids) {
+        this.ids = ids;
+    }
+
+    public String getBhlx() {
+        return bhlx;
+    }
+
+    public void setBhlx(String bhlx) {
+        this.bhlx = bhlx;
+    }
 
     public String getYhid() {
         return yhid;

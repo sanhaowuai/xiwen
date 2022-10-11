@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+// 参与申报查看
+export function listSbglCysb(query) {
+  return request({
+    url: '/workload/sbgl/listSbglCysb',
+    method: 'get',
+    params: query
+  })
+}
 // 查询申报管理列表
 export function listSbgl(query) {
   return request({
